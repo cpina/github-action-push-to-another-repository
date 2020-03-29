@@ -21,3 +21,6 @@ runs:
     - ${{ inputs.destination-github-username }}
     - ${{ inputs.destination-repository-name }}
     - ${{ inputs.git-user-email }}
+branding:
+  icon: 'git-commit'
+  color: 'green'

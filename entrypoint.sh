@@ -6,7 +6,7 @@ GITHUB_USERNAME="$2"
 GITHUB_REPO="$3"
 GIT_USER_EMAIL="$4"
 
-CLONE_DIR=$(mktemp --directory)
+CLONE_DIR=$(mktemp -d)
 
 # Setup git
 git config --global user.email "$GIT_USER_EMAIL"

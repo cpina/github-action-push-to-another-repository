@@ -5,6 +5,8 @@ FOLDER="$1"
 GITHUB_USERNAME="$2"
 GITHUB_REPO="$3"
 
+CLONE_DIR="clone_repo"
+
 git config --global user.email "carles@pina.cat"
 git config --global user.name "$GITHUB_USERNAME"
 

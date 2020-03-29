@@ -4,32 +4,21 @@ echo "Starts"
 FOLDER="$1"
 GITHUB_USERNAME="$2"
 GITHUB_REPO="$3"
+GIT_USER_EMAIL="$4"
 
 CLONE_DIR="clone_repo"
 
-git config --global user.email "carles@pina.cat"
+# Setup git
+git config --global user.email "$GIT_USER_EMAIL"
 git config --global user.name "$GITHUB_USERNAME"
-
 git clone "https://$API_TOKEN_GITHUB@github.com/$GITHUB_USERNAME/$GITHUB_REPO.git" "$CLONE_DIR"
 
-ls -l
-
+# Copy files into the git and deletes all git
 cd "$CLONE_DIR"
 # find needs to be in the git repository directory
 find . | grep -v ".git" | grep -v "^\.*$" | xargs rm -rf # delete all files (to handle deletions)
-
 cp -r "../$FOLDER"/* .
-
-echo "After cd $CLONE_DIR"
-
-ls -la
 
 git add .
 git commit --message "Update from $GITHUB_REPOSITORY"
 git push origin master
-
-cd ..
-echo "Done!"
-
-
-echo "Ends"

@@ -10,6 +10,9 @@ inputs:
   destination-repository-name:
     description: 'Destination repository'
     required: true
+  user-email:
+    description: 'Email for the git commit'
+    required: true
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -17,3 +20,4 @@ runs:
     - ${{ inputs.source-directory }}
     - ${{ inputs.destination-github-username }}
     - ${{ inputs.destination-repository-name }}
+    - ${{ inputs.git-user-email }}

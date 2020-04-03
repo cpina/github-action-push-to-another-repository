@@ -53,3 +53,9 @@ Then make the token available to the Github Action following the steps:
 Working example:
 
 https://github.com/cpina/push-to-another-repository-example/blob/master/.github/workflows/ci.yml
+
+It generates files from:
+https://github.com/cpina/push-to-another-repository-example
+
+To:
+https://github.com/cpina/push-to-another-repository-output

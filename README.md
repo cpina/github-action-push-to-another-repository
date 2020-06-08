@@ -47,7 +47,7 @@ Then make the token available to the Github Action following the steps:
           source-directory: 'output'
           destination-github-username: 'cpina'
           destination-repository-name: 'pandoc-test-output'
-          git-user-email: carles@pina.cat
+          user-email: carles3@pina.cat
 ```
 
 Working example:

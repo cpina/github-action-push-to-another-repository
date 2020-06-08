@@ -20,7 +20,7 @@ runs:
     - ${{ inputs.source-directory }}
     - ${{ inputs.destination-github-username }}
     - ${{ inputs.destination-repository-name }}
-    - ${{ inputs.git-user-email }}
+    - ${{ inputs.user-email }}
 branding:
   icon: 'git-commit'
   color: 'green'

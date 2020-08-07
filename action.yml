@@ -13,6 +13,9 @@ inputs:
   user-email:
     description: 'Email for the git commit'
     required: true
+  destination-repository-username:
+    description: '[Optional] Username/organization for the destination repository'
+    required: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -21,6 +24,7 @@ runs:
     - ${{ inputs.destination-github-username }}
     - ${{ inputs.destination-repository-name }}
     - ${{ inputs.user-email }}
+    - ${{ inputs.destination-repository-username }}
 branding:
   icon: 'git-commit'
   color: 'green'

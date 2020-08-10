@@ -7,7 +7,8 @@ GITHUB_REPO="$3"
 USER_EMAIL="$4"
 REPO_USERNAME="$5"
 
-if [ -z "$REPO_USERNAME" ] then
+if [ -z "$REPO_USERNAME" ]
+then
   REPO_USERNAME=$GITHUB_USERNAME
 fi
 

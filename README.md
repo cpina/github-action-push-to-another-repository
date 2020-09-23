@@ -25,6 +25,9 @@ The email that will be used for the commit in the destination-repository-name.
 ### `destination-repository-username` (argument) [optional]
 The Username/Organization for the destination repository, if different from `destination-github-username`. For the repository `https://github.com/cpina/push-to-another-repository-output` is `cpina`.
 
+### `target-branch` (argument) [optional]
+The branch name for the destination repository, if different from `master`.
+
 ### `API_TOKEN_GITHUB` (environment)
 E.g.:
   `API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}`

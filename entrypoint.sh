@@ -12,7 +12,7 @@ if [ -z "$REPO_USERNAME" ]
 then
   REPO_USERNAME=$GITHUB_USERNAME
 fi
-if [ -z "$TARGET_BRANCH"]
+if [ -z "$TARGET_BRANCH" ]
 then
   TARGET_BRANCH="master"
 fi

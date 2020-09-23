@@ -16,6 +16,9 @@ inputs:
   destination-repository-username:
     description: '[Optional] Username/organization for the destination repository'
     required: false
+  target-branch:
+    description: '[Optional] set target branch name for the destination repository'
+    required: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -25,6 +28,7 @@ runs:
     - ${{ inputs.destination-repository-name }}
     - ${{ inputs.user-email }}
     - ${{ inputs.destination-repository-username }}
+    - ${{ inputs.target-branch }}
 branding:
   icon: 'git-commit'
   color: 'green'

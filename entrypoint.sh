@@ -32,7 +32,8 @@ ls -la "$CLONE_DIR"
 #ls -la "$CLONE_DIR"
 
 echo "Copying contents to to git repo"
-cp -r "$FOLDER"/* "$CLONE_DIR"
+mkdir -p $CLONE_DIR/$INPUT_DESTINATION_FOLDER
+cp -r "$FOLDER"/* "$CLONE_DIR/$INPUT_DESTINATION_FOLDER"
 cd "$CLONE_DIR"
 ls -la
 

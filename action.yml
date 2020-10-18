@@ -1,34 +1,38 @@
-name: 'Push directory to another repository'
-description: 'Useful to push files to another repository to be used, for example, via github pages'
+name: "Push directory to another repository"
+description: "Useful to push files to another repository to be used, for example, via github pages"
 inputs:
   source-directory:
-    description: 'Source directory from the origin directory'
+    description: "Source directory from the origin directory"
     required: true
+  additional-repos:
+    description: "Any additional repos for the final commit"
+    required: false
   destination-github-username:
-    description: 'Name of the destination username/organization'
+    description: "Name of the destination username/organization"
     required: true
   destination-repository-name:
-    description: 'Destination repository'
+    description: "Destination repository"
     required: true
   user-email:
-    description: 'Email for the git commit'
+    description: "Email for the git commit"
     required: true
   destination-repository-username:
-    description: '[Optional] Username/organization for the destination repository'
+    description: "[Optional] Username/organization for the destination repository"
     required: false
   target-branch:
-    description: '[Optional] set target branch name for the destination repository'
+    description: "[Optional] set target branch name for the destination repository"
     required: false
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: "docker"
+  image: "Dockerfile"
   args:
     - ${{ inputs.source-directory }}
+    - ${{ inputs.additional-repos }}
     - ${{ inputs.destination-github-username }}
     - ${{ inputs.destination-repository-name }}
     - ${{ inputs.user-email }}
     - ${{ inputs.destination-repository-username }}
     - ${{ inputs.target-branch }}
 branding:
-  icon: 'git-commit'
-  color: 'green'
+  icon: "git-commit"
+  color: "green"

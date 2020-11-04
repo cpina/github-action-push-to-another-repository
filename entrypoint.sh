@@ -39,7 +39,7 @@ ls -la
 echo "Adding git commit"
 
 ORIGIN_COMMIT="https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
-COMMIT_MESSAGE=$(echo "$COMMIT_MESSAGE" | sed "s/ORIGIN_COMMIT/$ORIGIN_COMMIT/g")
+COMMIT_MESSAGE="${COMMIT_MESSAGE/ORIGIN_COMMIT/$ORIGIN_COMMIT}"
 
 git add .
 git status

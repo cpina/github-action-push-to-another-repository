@@ -21,6 +21,9 @@ inputs:
     description: '[Optional] set target branch name for the destination repository. Defaults to "master"'
     default: 'master'
     required: false
+  commit-message: '[Optional] commit message for the output repository. ORIGIN_COMMIT is replaced by the URL@commit in the origin repo'
+    default: 'Update from ORIGIN_COMMIT'
+    required: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -31,6 +34,7 @@ runs:
     - ${{ inputs.user-email }}
     - ${{ inputs.destination-repository-username }}
     - ${{ inputs.target-branch }}
+    - ${{ inputs.commit-message }}
 branding:
   icon: 'git-commit'
   color: 'green'

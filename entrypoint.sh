@@ -10,6 +10,7 @@ DESTINATION_REPOSITORY_NAME="$3"
 USER_EMAIL="$4"
 DESTINATION_REPOSITORY_USERNAME="$5"
 TARGET_BRANCH="$6"
+COMMIT_MESSAGE="$7"
 
 if [ -z "$DESTINATION_REPOSITORY_USERNAME" ]
 then
@@ -36,9 +37,13 @@ cd "$CLONE_DIR"
 ls -la
 
 echo "Adding git commit"
+
+ORIGIN_COMMIT="https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
+COMMIT_MESSAGE=$(echo "$COMMIT_MESSAGE" | sed "s/ORIGIN_COMMIT/$ORIGIN_COMMIT")
+
 git add .
 git status
-git commit --message "Update from https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
+git commit --message "$COMMIT_MESSAGE"
 
 echo "Pushing git commit"
 git push origin "$TARGET_BRANCH"

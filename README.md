@@ -30,6 +30,11 @@ The Username/Organization for the destination repository, if different from `des
 ### `target-branch` (argument) [optional]
 The branch name for the destination repository, if different from `master`.
 
+### `commit-message` (argument) [optional]
+The commit message to be used in the output repository. Optional and defaults to "Update from $REPOSITORY_URL@commit".
+
+The string `ORIGIN_COMMIT` is replaced by `$REPOSITORY_URL@commit`.
+
 ### `API_TOKEN_GITHUB` (environment)
 E.g.:
   `API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}`

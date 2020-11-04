@@ -1,6 +1,6 @@
 # github-action-push-to-another-repository
 
-Used to push generated files from a directory from Git Action step into another repository on Github.
+Used to push generated files from a directory from Git Action step into another repository on Github. By design it deletes the files from the destination directory as it is meant to "publish" a set generated files.
 
 E.g.
 Repository pandoc-test contains Markdown and a Git Action to generate, using Pandoc, an output: HTML, PDF, odt, epub, etc.
@@ -18,6 +18,8 @@ For the repository `https://github.com/cpina/push-to-another-repository-output` 
 
 ### `destination-repository-name` (argument)
 For the repository `https://github.com/cpina/push-to-another-repository-output` is `push-to-another-repository-output`
+
+*Warning:* this Github Action currently deletes all the files and directories in the destination repository. The idea is to copy from an `output` directory into the `destination-repository-name` having a copy without any previous files there.
 
 ### `user-email` (argument)
 The email that will be used for the commit in the destination-repository-name.

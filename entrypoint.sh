@@ -1,21 +1,19 @@
 #!/bin/sh -l
 
-
-
 set -e  # if a command fails it stops the execution
 set -u  # script fails if trying to access to an undefined variable
 
 echo "Starts"
-FOLDER="$1"
-GITHUB_USERNAME="$2"
-GITHUB_REPO="$3"
+SOURCE_DIRECTORY="$1"
+DESTINATION_GITHUB_USERNAME="$2"
+DESTINATION_REPOSITORY_NAME="$3"
 USER_EMAIL="$4"
-REPO_USERNAME="$5"
+DESTINATION_REPOSITORY_USERNAME="$5"
 TARGET_BRANCH="$6"
 
-if [ -z "$REPO_USERNAME" ]
+if [ -z "$DESTINATION_REPOSITORY_USERNAME" ]
 then
-  REPO_USERNAME="$GITHUB_USERNAME"
+  DESTINATION_REPOSITORY_USERNAME="$DESTINATION_GITHUB_USERNAME"
 fi
 
 CLONE_DIR=$(mktemp -d)
@@ -23,8 +21,8 @@ CLONE_DIR=$(mktemp -d)
 echo "Cloning destination git repository"
 # Setup git
 git config --global user.email "$USER_EMAIL"
-git config --global user.name "$GITHUB_USERNAME"
-git clone --single-branch --branch "$TARGET_BRANCH" "https://$API_TOKEN_GITHUB@github.com/$REPO_USERNAME/$GITHUB_REPO.git" "$CLONE_DIR"
+git config --global user.name "$DESTINATION_GITHUB_USERNAME"
+git clone --single-branch --branch "$TARGET_BRANCH" "https://$API_TOKEN_GITHUB@github.com/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" "$CLONE_DIR"
 ls -la "$CLONE_DIR"
 
 echo "Cleaning destination repository of old files"
@@ -33,7 +31,7 @@ find "$CLONE_DIR" | grep -v "^$CLONE_DIR/\.git" | grep -v "^$CLONE_DIR$" | xargs
 ls -la "$CLONE_DIR"
 
 echo "Copying contents to to git repo"
-cp -r "$FOLDER"/* "$CLONE_DIR"
+cp -r "$SOURCE_DIRECTORY"/* "$CLONE_DIR"
 cd "$CLONE_DIR"
 ls -la
 

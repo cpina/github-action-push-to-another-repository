@@ -1,5 +1,10 @@
 #!/bin/sh -l
 
+
+
+set -e  # if a command fails it stops the execution
+set -u  # script fails if trying to access to an undefined variable
+
 echo "Starts"
 FOLDER="$1"
 GITHUB_USERNAME="$2"
@@ -11,10 +16,6 @@ TARGET_BRANCH="$6"
 if [ -z "$REPO_USERNAME" ]
 then
   REPO_USERNAME="$GITHUB_USERNAME"
-fi
-if [ -z "$TARGET_BRANCH" ]
-then
-  TARGET_BRANCH="master"
 fi
 
 CLONE_DIR=$(mktemp -d)

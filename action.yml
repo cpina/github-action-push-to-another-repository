@@ -16,8 +16,10 @@ inputs:
   destination-repository-username:
     description: '[Optional] Username/organization for the destination repository'
     required: false
+    default: ''
   target-branch:
-    description: '[Optional] set target branch name for the destination repository'
+    description: '[Optional] set target branch name for the destination repository. Defaults to "master"'
+    default: 'master'
     required: false
 runs:
   using: 'docker'

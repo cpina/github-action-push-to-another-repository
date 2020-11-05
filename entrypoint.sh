@@ -31,7 +31,7 @@ echo "Cleaning destination repository of old files"
 find "$CLONE_DIR" | grep -v "^$CLONE_DIR/\.git" | grep -v "^$CLONE_DIR$" | xargs rm -rf # delete all files (to handle deletions)
 ls -la "$CLONE_DIR"
 
-echo "Copying contents to to git repo"
+echo "Copying contents to git repo"
 cp -r "$SOURCE_DIRECTORY"/* "$CLONE_DIR"
 cd "$CLONE_DIR"
 ls -la

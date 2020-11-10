@@ -48,4 +48,5 @@ git status
 git diff-index --quiet HEAD || git commit --message "$COMMIT_MESSAGE"
 
 echo "Pushing git commit"
-git push origin -u "$TARGET_BRANCH"
+# --set-upstream: sets de branch when pushing to a remote empty repository
+git push origin --set-upstream "$TARGET_BRANCH"

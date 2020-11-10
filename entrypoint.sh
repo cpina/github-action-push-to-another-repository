@@ -48,4 +48,4 @@ git status
 git diff-index --quiet HEAD || git commit --message "$COMMIT_MESSAGE"
 
 echo "Pushing git commit"
-git push origin "$TARGET_BRANCH"
+git push origin -u "$TARGET_BRANCH"

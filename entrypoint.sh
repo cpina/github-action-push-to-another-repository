@@ -27,13 +27,20 @@ git clone --single-branch --branch "$TARGET_BRANCH" "https://$API_TOKEN_GITHUB@g
 ls -la "$CLONE_DIR"
 
 echo "Cleaning destination repository of old files"
-# Copy files into the git and deletes all git
-find "$CLONE_DIR" | grep -v "^$CLONE_DIR/\.git$" | grep -v "^$CLONE_DIR$" | xargs rm -vrf # delete all files (to handle deletions)
+# Deletes the conents of $CLONE_DIR with three exceptions (! -path "..."):
+# -Skips the $CLONE_DIR/ directory itself
+# -Skips the contents of $CLONE_DIR/.git/*
+# -Skips the $CLONE_DIR/.git
+find "$CLONE_DIR/" ! -path "$CLONE_DIR/" ! -path "$CLONE_DIR/.git/*"  ! -path "$CLONE_DIR/.git" -exec rm -rf {} \;
+
+echo "Contents of $CLONE_DIR after deleting everything but .git"
 ls -la "$CLONE_DIR"
 
 echo "Copying contents to git repo"
 cp -r "$SOURCE_DIRECTORY"/* "$CLONE_DIR"
 cd "$CLONE_DIR"
+
+echo "Files that will be pushed"
 ls -la
 
 echo "Adding git commit"

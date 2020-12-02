@@ -26,19 +26,12 @@ git config --global user.name "$DESTINATION_GITHUB_USERNAME"
 git clone --single-branch --branch "$TARGET_BRANCH" "https://$API_TOKEN_GITHUB@github.com/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" "$CLONE_DIR"
 ls -la "$CLONE_DIR"
 
-echo "Cleaning destination repository of old files"
-# Deletes the contents of $CLONE_DIR with three exceptions (! -path "..."):
-# -Skips the $CLONE_DIR/ directory itself
-# -Skips the contents of $CLONE_DIR/.git/*
-# -Skips the $CLONE_DIR/.git
-find "$CLONE_DIR/" ! -path "$CLONE_DIR/" ! -path "$CLONE_DIR/.git/*"  ! -path "$CLONE_DIR/.git" -exec rm -rf {} \;
-
-echo "Contents of $CLONE_DIR after deleting everything but .git"
-ls -la "$CLONE_DIR"
+TARGET_DIR=$(mktemp -d)
+mv "$CLONE_DIR/.git" "$TARGET_DIR"
 
 echo "Copying contents to git repo"
-cp -r "$SOURCE_DIRECTORY"/* "$CLONE_DIR"
-cd "$CLONE_DIR"
+cp -ra "$SOURCE_DIRECTORY"/. "$TARGET_DIR"
+cd "$TARGET_DIR"
 
 echo "Files that will be pushed"
 ls -la

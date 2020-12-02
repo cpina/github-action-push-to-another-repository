@@ -27,7 +27,7 @@ git clone --single-branch --branch "$TARGET_BRANCH" "https://$API_TOKEN_GITHUB@g
 ls -la "$CLONE_DIR"
 
 echo "Cleaning destination repository of old files"
-# Deletes the conents of $CLONE_DIR with three exceptions (! -path "..."):
+# Deletes the contents of $CLONE_DIR with three exceptions (! -path "..."):
 # -Skips the $CLONE_DIR/ directory itself
 # -Skips the contents of $CLONE_DIR/.git/*
 # -Skips the $CLONE_DIR/.git

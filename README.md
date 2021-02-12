@@ -1,13 +1,11 @@
-# github-action-push-to-another-repository
+# github-action-push-branch-to-another-repository-branch
 
-Used to push generated files from a directory from Git Action step into another repository on Github. By design it deletes the files from the destination directory as it is meant to "publish" a set generated files.
+Used to push generated files from a branch from Git Action step into a branch in another repository on Github. By design it deletes the files from the destination branch as it is meant to "publish" a set generated files.
 
-E.g.
-Repository pandoc-test contains Markdown and a Git Action to generate, using Pandoc, an output: HTML, PDF, odt, epub, etc.
+Basically, after running this action, the contents of the destination branch will be the same as the contents of the source branch.
 
-Repository pandoc-test-output: contains only the generated files from the first Git Action. Pushed here with github-action-push-to-another-repository
-
-And pandoc-test-output can have Git Pages to give access to the files (or just links to the raw version of the files)
+**Note:** Both source and destination branch must exists. This action does not create the destination branch if it doesn't exists.
+**Note:** The new commit will override the entire content of the destination branch with the source branch in a new commit. It does not override the history in destination branch.
 
 ## Inputs
 ### `source-directory` (argument)

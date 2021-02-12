@@ -17,11 +17,6 @@ COMMIT_USER_EMAIL="$7"
 COMMIT_USERNAME="$8"
 COMMIT_MESSAGE="$9"
 
-if [ -z "$COMMIT_USER_NAME" ]
-then
-  COMMIT_USERNAME="$DESTINATION_REPOSITORY_USERNAME"
-fi
-
 SOURCE_DIR=$(mktemp -d)
 DESTINATION_DIR=$(mktemp -d)
 
@@ -61,4 +56,4 @@ git diff-index --quiet HEAD || git commit --message "$COMMIT_MESSAGE"
 
 echo "Pushing git commit"
 # --set-upstream: sets de branch when pushing to a branch that does not exist
-git push origin --set-upstream "$TARGET_BRANCH"
+git push origin --set-upstream "$DESTINATION_BRANCH"

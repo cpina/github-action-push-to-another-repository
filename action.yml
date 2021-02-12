@@ -1,26 +1,30 @@
-name: 'Push directory to another repository'
-description: 'Useful to push files to another repository to be used, for example, via github pages'
+name: 'Push contents of a branch into a branch in another repository'
+description: 'Useful to push content of a branch into another branch in another repository (by completely overriding the content in the desination repository) to be used, for example, for github pages'
 inputs:
-  source-directory:
-    description: 'Source directory from the origin directory'
+  source-repository-username:
+    description: 'Username/organization of the source repository'
     required: true
-  destination-github-username:
-    description: 'Name of the destination username/organization'
+  source-repository-name:
+    description: 'Name of the source repository'
     required: true
-  destination-repository-name:
-    description: 'Destination repository'
-    required: true
-  user-email:
-    description: 'Email for the git commit'
+  source-branch:
+    description: 'Name of the source branch'
     required: true
   destination-repository-username:
-    description: '[Optional] Username/organization for the destination repository'
-    required: false
-    default: ''
-  target-branch:
-    description: '[Optional] set target branch name for the destination repository. Defaults to "master"'
-    default: 'master'
-    required: false
+    description: 'Username/organization of the destination repository'
+    required: true
+  destination-repository-name:
+    description: 'Name of the destination repository'
+    required: true
+  destination-branch:
+    description: 'Name of the destination branch'
+    required: true
+  commit-user-email:
+    description: 'Email for the git commit'
+    required: true
+  commit-username:
+    description: 'User name for the git commit'
+    required: true
   commit-message:
     description: '[Optional] commit message for the output repository. ORIGIN_COMMIT is replaced by the URL@commit in the origin repo'
     default: 'Update from ORIGIN_COMMIT'
@@ -29,13 +33,16 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.source-directory }}
-    - ${{ inputs.destination-github-username }}
-    - ${{ inputs.destination-repository-name }}
-    - ${{ inputs.user-email }}
+    - ${{ inputs.source-repository-username }}
+    - ${{ inputs.source-repository-name }}
+    - ${{ inputs.source-branch }}
     - ${{ inputs.destination-repository-username }}
-    - ${{ inputs.target-branch }}
+    - ${{ inputs.destination-repository-name }}
+    - ${{ inputs.destination-branch }}
+    - ${{ inputs.commit-user-email }}
+    - ${{ inputs.commit-username }}
     - ${{ inputs.commit-message }}
 branding:
   icon: 'git-commit'
   color: 'green'
+  

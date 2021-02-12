@@ -3,37 +3,49 @@
 set -e  # if a command fails it stops the execution
 set -u  # script fails if trying to access to an undefined variable
 
-echo "Starts"
-SOURCE_DIRECTORY="$1"
-DESTINATION_GITHUB_USERNAME="$2"
-DESTINATION_REPOSITORY_NAME="$3"
-USER_EMAIL="$4"
-DESTINATION_REPOSITORY_USERNAME="$5"
-TARGET_BRANCH="$6"
-COMMIT_MESSAGE="$7"
+echo "Started"
 
-if [ -z "$DESTINATION_REPOSITORY_USERNAME" ]
+SOURCE_REPOSITORY_USERNAME="$1"
+SOURCE_REPOSITORY_NAME="$2"
+SOURCE_BRANCH="$3"
+
+DESTINATION_REPOSITORY_USERNAME="$4"
+DESTINATION_REPOSITORY_NAME="$5"
+DESTINATION_BRANCH="$6"
+
+COMMIT_USER_EMAIL="$7"
+COMMIT_USERNAME="$8"
+COMMIT_MESSAGE="$9"
+
+if [ -z "$COMMIT_USER_NAME" ]
 then
-  DESTINATION_REPOSITORY_USERNAME="$DESTINATION_GITHUB_USERNAME"
+  COMMIT_USERNAME="$DESTINATION_REPOSITORY_USERNAME"
 fi
 
-CLONE_DIR=$(mktemp -d)
+SOURCE_DIR=$(mktemp -d)
+DESTINATION_DIR=$(mktemp -d)
+
+# Setup git
+git config --global user.email "$COMMIT_USER_EMAIL"
+git config --global user.name "$COMMIT_USERNAME"
+
+echo "Cloning source git repository"
+git clone --single-branch --branch "$SOURCE_BRANCH" "https://$API_TOKEN_GITHUB@github.com/$SOURCE_REPOSITORY_USERNAME/$SOURCE_REPOSITORY_NAME.git" "$SOURCE_DIR"
+ls -la "$SOURCE_DIR"
 
 echo "Cloning destination git repository"
-# Setup git
-git config --global user.email "$USER_EMAIL"
-git config --global user.name "$DESTINATION_GITHUB_USERNAME"
-git clone --single-branch --branch "$TARGET_BRANCH" "https://$API_TOKEN_GITHUB@github.com/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" "$CLONE_DIR"
-ls -la "$CLONE_DIR"
+git clone --single-branch --branch "$DESTINATION_BRANCH" "https://$API_TOKEN_GITHUB@github.com/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" "$DESTINATION_DIR"
+ls -la "$DESTINATION_DIR"
 
+echo "Copying from source branch to destination branch"
 TARGET_DIR=$(mktemp -d)
-mv "$CLONE_DIR/.git" "$TARGET_DIR"
+cp -ra "$SOURCE_DIR"/. "$TARGET_DIR"
 
-echo "Copying contents to git repo"
-cp -ra "$SOURCE_DIRECTORY"/. "$TARGET_DIR"
-cd "$TARGET_DIR"
+rm -rf "$TARGET_DIR"/.git
+mv "$DESTINATION_DIR/.git" "$TARGET_DIR"
 
 echo "Files that will be pushed"
+cd "$TARGET_DIR"
 ls -la
 
 echo "Adding git commit"

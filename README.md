@@ -5,33 +5,41 @@ Used to push generated files from a branch from Git Action step into a branch in
 Basically, after running this action, the contents of the destination branch will be the same as the contents of the source branch.
 
 **Note:** Both source and destination branch must exists. This action does not create the destination branch if it doesn't exists.
+
 **Note:** The new commit will override the entire content of the destination branch with the source branch in a new commit. It does not override the history in destination branch.
 
 ## Inputs
-### `source-directory` (argument)
-From the repository that this Git Action is executed the directory that contains the files to be pushed into the repository.
 
-### `destination-github-username` (argument)
-For the repository `https://github.com/cpina/push-to-another-repository-output` is `cpina`. It's also used for the `Author:` in the generated git messages.
-
-### `destination-repository-name` (argument)
-For the repository `https://github.com/cpina/push-to-another-repository-output` is `push-to-another-repository-output`
-
-*Warning:* this Github Action currently deletes all the files and directories in the destination repository. The idea is to copy from an `output` directory into the `destination-repository-name` having a copy without any previous files there.
-
-### `user-email` (argument)
-The email that will be used for the commit in the destination-repository-name.
-
-### `destination-repository-username` (argument) [optional]
-The Username/Organization for the destination repository, if different from `destination-github-username`. For the repository `https://github.com/cpina/push-to-another-repository-output` is `cpina`.
-
-### `target-branch` (argument) [optional]
-The branch name for the destination repository, if different from `master`.
-
-### `commit-message` (argument) [optional]
-The commit message to be used in the output repository. Optional and defaults to "Update from $REPOSITORY_URL@commit".
-
-The string `ORIGIN_COMMIT` is replaced by `$REPOSITORY_URL@commit`.
+```yaml
+  source-repository-username:
+    description: 'Username/organization of the source repository'
+    required: true
+  source-repository-name:
+    description: 'Name of the source repository'
+    required: true
+  source-branch:
+    description: 'Name of the source branch'
+    required: true
+  destination-repository-username:
+    description: 'Username/organization of the destination repository'
+    required: true
+  destination-repository-name:
+    description: 'Name of the destination repository'
+    required: true
+  destination-branch:
+    description: 'Name of the destination branch'
+    required: true
+  commit-user-email:
+    description: 'Email for the git commit'
+    required: true
+  commit-username:
+    description: 'User name for the git commit'
+    required: true
+  commit-message:
+    description: '[Optional] commit message for the output repository. ORIGIN_COMMIT is replaced by the URL@commit in the origin repo'
+    default: 'Update from ORIGIN_COMMIT'
+    required: false
+```
 
 ### `API_TOKEN_GITHUB` (environment)
 E.g.:
@@ -50,23 +58,20 @@ Then make the token available to the Github Action following the steps:
 
 ## Example usage
 ```yaml
-      - name: Pushes to another repository
-        uses: cpina/github-action-push-to-another-repository@master
+      - name: Pushes to branch in another repository
+        uses: emre-e/github-action-push-branch-to-another-repository-branch@master
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
-          source-directory: 'output'
-          destination-github-username: 'cpina'
-          destination-repository-name: 'pandoc-test-output'
-          user-email: carles3@pina.cat
+          source-repository-username: 'example-username'
+          source-repository-name: 'source-repo'
+          source-branch: 'source-branch'
+          destination-repository-username: 'emre-e'
+          destination-repository-name: 'dest-blog'
+          destination-branch: 'dest-branch'
+          commit-user-email: 'example.email@for.the.commit.com'
+          commit-username: 'example-username'
 ```
 
-Working example:
-
-https://github.com/cpina/push-to-another-repository-example/blob/master/.github/workflows/ci.yml
-
-It generates files from:
-https://github.com/cpina/push-to-another-repository-example
-
-To:
-https://github.com/cpina/push-to-another-repository-output
+### Push directory into another repository instead
+https://github.com/cpina/github-action-push-to-another-repository

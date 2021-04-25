@@ -35,10 +35,14 @@ mv "$CLONE_DIR/.git" "$TARGET_DIR"
 if [ ! -d "$SOURCE_DIRECTORY" ]
 then
 	echo "$SOURCE_DIRECTORY does not exist"
-	echo "Reminder: github-action-push-to-another-repository does not do the checkout"
-	echo "from the source GitHub repository. The checkout needs to be done using"
-	echo "a different step. See the actions/checkout@v2 in the example file"
-	echo "https://github.com/cpina/push-to-another-repository-example/blob/master/.github/workflows/ci.yml#L16"
+	echo "This directory needs to exist when push-to-another-repository is executed"
+	echo
+	echo "In the example it is created by ./build.sh: https://github.com/cpina/push-to-another-repository-example/blob/master/.github/workflows/ci.yml#L19"
+	echo
+	echo "If you want to copy a directory that exist in the source repository"
+	echo "to the target repository: you need to clone the source repository"
+	echo "in a previous step in the same build section. For example using"
+	echo "actions/checkout@v2. See: https://github.com/cpina/push-to-another-repository-example/blob/master/.github/workflows/ci.yml#L16"
 	exit 1
 fi
 

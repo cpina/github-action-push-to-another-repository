@@ -4,7 +4,7 @@ When to use this GitHub Action? It is useful in case that you have a GitHub repo
 
 Flow:
 
-The [example repository](https://github.com/cpina/push-to-another-repository-example) has a MarkDown file ((main.md)(https://github.com/cpina/push-to-another-repository-example/blob/master/main.md)), during the [GitHub Actions flow](https://github.com/cpina/push-to-another-repository-example/blob/master/.github/workflows/ci.yml#L19) it executes [build.sh](https://github.com/cpina/push-to-another-repository-example/blob/master/build.sh) and the output/ directory (configurable via [source-directory](https://github.com/cpina/push-to-another-repository-example/blob/master/.github/workflows/ci.yml#L27) appears in the [output repository](https://github.com/cpina/push-to-another-repository-output).
+The [example repository](https://github.com/cpina/push-to-another-repository-example) has a MarkDown file [main.md](https://github.com/cpina/push-to-another-repository-example/blob/master/main.md)), during the [GitHub Actions flow](https://github.com/cpina/push-to-another-repository-example/blob/master/.github/workflows/ci.yml#L19) it executes [build.sh](https://github.com/cpina/push-to-another-repository-example/blob/master/build.sh) and the output/ directory (configurable via [source-directory](https://github.com/cpina/push-to-another-repository-example/blob/master/.github/workflows/ci.yml#L27) appears in the [output repository](https://github.com/cpina/push-to-another-repository-output).
 
 Please bear in mind: files in the target repository are deleted. This is to make sure that it contains only the generated files in the last run without previously generated files.
 

@@ -27,26 +27,41 @@ git clone --single-branch --branch "$TARGET_BRANCH" "https://$API_TOKEN_GITHUB@g
 ls -la "$CLONE_DIR"
 
 TARGET_DIR=$(mktemp -d)
+# This mv has been the easier way to be able to remove files that were there
+# but not anymore. Otherwise we had to remove the files from "$CLONE_DIR",
+# including "." and with the exception of ".git/"
 mv "$CLONE_DIR/.git" "$TARGET_DIR"
 
-echo "Copying contents to git repo"
+if [ ! -d "$SOURCE_DIRECTORY" ]
+then
+	echo "$SOURCE_DIRECTORY does not exist"
+	echo "Reminder: github-action-push-to-another-repository does not do the checkout"
+	echo "from the source GitHub repository. The checkout needs to be done using"
+	echo "a different step. See the actions/checkout@v2 in the example file"
+	echo "https://github.com/cpina/push-to-another-repository-example/blob/master/.github/workflows/ci.yml#L16"
+	exit 1
+fi
+
+echo "Copy contents to target git repository"
 cp -ra "$SOURCE_DIRECTORY"/. "$TARGET_DIR"
 cd "$TARGET_DIR"
 
-echo "Files that will be pushed"
+echo "Files that will be pushed:"
 ls -la
-
-echo "Adding git commit"
 
 ORIGIN_COMMIT="https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
 COMMIT_MESSAGE="${COMMIT_MESSAGE/ORIGIN_COMMIT/$ORIGIN_COMMIT}"
 
+echo "git add:"
 git add .
+
+echo "git status:"
 git status
 
+echo "git diff-index:"
 # git diff-index : to avoid doing the git commit failing if there are no changes to be commit
 git diff-index --quiet HEAD || git commit --message "$COMMIT_MESSAGE"
 
-echo "Pushing git commit"
+echo "git push origin:"
 # --set-upstream: sets de branch when pushing to a branch that does not exist
 git push origin --set-upstream "$TARGET_BRANCH"

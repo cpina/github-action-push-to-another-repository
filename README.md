@@ -1,13 +1,14 @@
 # github-action-push-to-another-repository
 
-Used to push generated files from a directory from Git Action step into another repository on Github. By design it deletes the files from the destination directory as it is meant to "publish" a set generated files.
+When to use this GitHub Action? It is useful in case that you have a GitHub repository with a a directory that you want to push to another GitHub repository using GitHub Actions (automated on push, for example). It is also useful if using GitHub Actions you generate certain files that you want to push to another GitHub repository.
 
-E.g.
-Repository pandoc-test contains Markdown and a Git Action to generate, using Pandoc, an output: HTML, PDF, odt, epub, etc.
+Flow:
 
-Repository pandoc-test-output: contains only the generated files from the first Git Action. Pushed here with github-action-push-to-another-repository
+The [example repository](https://github.com/cpina/push-to-another-repository-example) has a MarkDown file ((main.md)(https://github.com/cpina/push-to-another-repository-example/blob/master/main.md)), during the [GitHub Actions flow](https://github.com/cpina/push-to-another-repository-example/blob/master/.github/workflows/ci.yml#L19) it executes [build.sh](https://github.com/cpina/push-to-another-repository-example/blob/master/build.sh) and the output/ directory (configurable via [source-directory](https://github.com/cpina/push-to-another-repository-example/blob/master/.github/workflows/ci.yml#L27) appears in the [output repository](https://github.com/cpina/push-to-another-repository-output).
 
-And pandoc-test-output can have Git Pages to give access to the files (or just links to the raw version of the files)
+Please bear in mind: files in the target repository are deleted. This is to make sure that it contains only the generated files in the last run without previously generated files.
+
+There are different variables to setup the behaviour:
 
 ## Inputs
 ### `source-directory` (argument)
@@ -28,7 +29,7 @@ The email that will be used for the commit in the destination-repository-name.
 The Username/Organization for the destination repository, if different from `destination-github-username`. For the repository `https://github.com/cpina/push-to-another-repository-output` is `cpina`.
 
 ### `target-branch` (argument) [optional]
-The branch name for the destination repository, if different from `master`.
+The branch name for the destination repository. It defaults to `master` for historical reasons, feel free to change it to `main`.
 
 ### `commit-message` (argument) [optional]
 The commit message to be used in the output repository. Optional and defaults to "Update from $REPOSITORY_URL@commit".

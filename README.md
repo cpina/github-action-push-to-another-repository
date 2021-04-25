@@ -62,7 +62,7 @@ Then make the token available to the Github Action following the steps:
           destination-github-username: 'cpina'
           destination-repository-name: 'pandoc-test-output'
           user-email: carles3@pina.cat
-	  target-branch: main
+          target-branch: main
 ```
 
 Working example:

@@ -13,6 +13,10 @@ inputs:
   user-email:
     description: 'Email for the git commit'
     required: true
+  user-name:
+    description: '[Optional] Name for the git commit. Defaults to the destination username/organization name'
+    required: false
+    default: ''
   destination-repository-username:
     description: '[Optional] Username/organization for the destination repository'
     required: false
@@ -33,6 +37,7 @@ runs:
     - ${{ inputs.destination-github-username }}
     - ${{ inputs.destination-repository-name }}
     - ${{ inputs.user-email }}
+    - ${{ inputs.user-name }}
     - ${{ inputs.destination-repository-username }}
     - ${{ inputs.target-branch }}
     - ${{ inputs.commit-message }}

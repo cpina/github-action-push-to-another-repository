@@ -15,7 +15,7 @@ There are different variables to setup the behaviour:
 From the repository that this Git Action is executed the directory that contains the files to be pushed into the repository.
 
 ### `destination-github-username` (argument)
-For the repository `https://github.com/cpina/push-to-another-repository-output` is `cpina`. It's also used for the `Author:` in the generated git messages.
+For the repository `https://github.com/cpina/push-to-another-repository-output` is `cpina`.
 
 ### `destination-repository-name` (argument)
 For the repository `https://github.com/cpina/push-to-another-repository-output` is `push-to-another-repository-output`
@@ -24,6 +24,9 @@ For the repository `https://github.com/cpina/push-to-another-repository-output` 
 
 ### `user-email` (argument)
 The email that will be used for the commit in the destination-repository-name.
+
+### `user-name` (argument) [optional]
+The name that will be used for the commit in the destination-repository-name. If not specified, the `destination-github-username` will be used instead.
 
 ### `destination-repository-username` (argument) [optional]
 The Username/Organization for the destination repository, if different from `destination-github-username`. For the repository `https://github.com/cpina/push-to-another-repository-output` is `cpina`.

@@ -37,7 +37,7 @@ The branch name for the destination repository. It defaults to `main` for histor
 ### `commit-message` (argument) [optional]
 The commit message to be used in the output repository. Optional and defaults to "Update from $REPOSITORY_URL@commit".
 
-### `target-branch` (argument) [optional]
+### `target-directory` (argument) [optional]
 The directory to wipe and replace in the target repository.  Defaults to wiping the entire repository
 
 The string `ORIGIN_COMMIT` is replaced by `$REPOSITORY_URL@commit`.

@@ -12,6 +12,7 @@ USER_NAME="$5"
 DESTINATION_REPOSITORY_USERNAME="$6"
 TARGET_BRANCH="$7"
 COMMIT_MESSAGE="$8"
+TARGET_DIRECTORY="$9"
 
 if [ -z "$DESTINATION_REPOSITORY_USERNAME" ]
 then
@@ -32,11 +33,18 @@ git config --global user.name "$USER_NAME"
 git clone --single-branch --branch "$TARGET_BRANCH" "https://$USER_NAME:$API_TOKEN_GITHUB@github.com/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" "$CLONE_DIR"
 ls -la "$CLONE_DIR"
 
-TARGET_DIR=$(mktemp -d)
+TEMP_DIR=$(mktemp -d)
 # This mv has been the easier way to be able to remove files that were there
 # but not anymore. Otherwise we had to remove the files from "$CLONE_DIR",
 # including "." and with the exception of ".git/"
-mv "$CLONE_DIR/.git" "$TARGET_DIR"
+mv "$CLONE_DIR/.git" "$TEMP_DIR/.git"
+
+# Remove contents of target directory and create a new empty one
+rm -R "$CLONE_DIR/$TARGET_DIRECTORY/"
+mkdir "$CLONE_DIR/$TARGET_DIRECTORY"
+
+mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
+
 
 #echo "[+] Deleting files from $DESTINATION_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
 #rm -rfv "$CLONE_DIR/$DESTINATION_DIRECTORY"/*
@@ -59,8 +67,8 @@ then
 fi
 
 echo "Copy contents to target git repository"
-cp -ra "$SOURCE_DIRECTORY"/. "$TARGET_DIR"
-cd "$TARGET_DIR"
+cp -ra "$SOURCE_DIRECTORY"/. "$CLONE_DIR/$TARGET_DIRECTORY"
+cd "$CLONE_DIR"
 
 echo "Files that will be pushed:"
 ls -la

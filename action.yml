@@ -29,6 +29,11 @@ inputs:
     description: '[Optional] commit message for the output repository. ORIGIN_COMMIT is replaced by the URL@commit in the origin repo'
     default: 'Update from ORIGIN_COMMIT'
     required: false
+  github-server:
+    description: 'Github server'
+    default: 'github.com'
+    required: true
+        
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -41,6 +46,7 @@ runs:
     - ${{ inputs.destination-repository-username }}
     - ${{ inputs.target-branch }}
     - ${{ inputs.commit-message }}
+    - ${{ inputs.github-server }}
 branding:
   icon: 'git-commit'
   color: 'green'

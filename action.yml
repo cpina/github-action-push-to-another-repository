@@ -10,6 +10,10 @@ inputs:
   destination-repository-name:
     description: 'Destination repository'
     required: true
+  github-server:
+    description: 'Github server'
+    default: 'github.com'
+    required: true
   user-email:
     description: 'Email for the git commit'
     required: true
@@ -29,10 +33,6 @@ inputs:
     description: '[Optional] commit message for the output repository. ORIGIN_COMMIT is replaced by the URL@commit in the origin repo'
     default: 'Update from ORIGIN_COMMIT'
     required: false
-  github-server:
-    description: 'Github server'
-    default: 'github.com'
-    required: true
         
 runs:
   using: 'docker'
@@ -41,12 +41,13 @@ runs:
     - ${{ inputs.source-directory }}
     - ${{ inputs.destination-github-username }}
     - ${{ inputs.destination-repository-name }}
+    - ${{ inputs.github-server }}
     - ${{ inputs.user-email }}
     - ${{ inputs.user-name }}
     - ${{ inputs.destination-repository-username }}
     - ${{ inputs.target-branch }}
     - ${{ inputs.commit-message }}
-    - ${{ inputs.github-server }}
+    
 branding:
   icon: 'git-commit'
   color: 'green'

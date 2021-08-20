@@ -26,7 +26,7 @@ fi
 
 CLONE_DIR=$(mktemp -d)
 
-echo "Cloning destination git repository"
+echo "[+] Cloning destination git repository $DESTINATION_REPOSITORY_NAME"
 # Setup git
 git config --global user.email "$USER_EMAIL"
 git config --global user.name "$USER_NAME"
@@ -39,17 +39,13 @@ TEMP_DIR=$(mktemp -d)
 # including "." and with the exception of ".git/"
 mv "$CLONE_DIR/.git" "$TEMP_DIR/.git"
 
+echo "[+] Deleting files from $DESTINATION_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
 # Remove contents of target directory and create a new empty one
 rm -R "$CLONE_DIR/$TARGET_DIRECTORY/"
-mkdir "$CLONE_DIR/$TARGET_DIRECTORY"
+echo "[+] Creating $TARGET_DIRECTORY if doesnt already exist"
+mkdir -p "$CLONE_DIR/$TARGET_DIRECTORY"
 
 mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
-
-
-#echo "[+] Deleting files from $DESTINATION_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
-#rm -rfv "$CLONE_DIR/$DESTINATION_DIRECTORY"/*
-#echo "[+] Veryfing that the directory that will be pushed is EMPTY"
-#ls -la "$CLONE_DIR/$DESTINATION_DIRECTORY"
 
 if [ ! -d "$SOURCE_DIRECTORY" ]
 then
@@ -66,27 +62,28 @@ then
 	exit 1
 fi
 
+echo "[+] Copying contents of source repository folder $SOURCE_DIRECTORY to folder $DESTINATION_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
 echo "Copy contents to target git repository"
 cp -ra "$SOURCE_DIRECTORY"/. "$CLONE_DIR/$TARGET_DIRECTORY"
 cd "$CLONE_DIR"
 
-echo "Files that will be pushed:"
+echo "[+] Files that will be pushed"
 ls -la
 
 ORIGIN_COMMIT="https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
 COMMIT_MESSAGE="${COMMIT_MESSAGE/ORIGIN_COMMIT/$ORIGIN_COMMIT}"
 COMMIT_MESSAGE="${COMMIT_MESSAGE/\$GITHUB_REF/$GITHUB_REF}"
 
-echo "git add:"
+echo "[+] Adding git commit"
 git add .
 
-echo "git status:"
+echo "[+] git status:"
 git status
 
-echo "git diff-index:"
+echo "[+] git diff-index:"
 # git diff-index : to avoid doing the git commit failing if there are no changes to be commit
 git diff-index --quiet HEAD || git commit --message "$COMMIT_MESSAGE"
 
-echo "git push origin:"
+echo "[+] Pushing git commit"
 # --set-upstream: sets de branch when pushing to a branch that does not exist
 git push "https://$USER_NAME:$API_TOKEN_GITHUB@github.com/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" --set-upstream "$TARGET_BRANCH"

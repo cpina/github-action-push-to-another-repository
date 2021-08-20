@@ -38,6 +38,11 @@ TARGET_DIR=$(mktemp -d)
 # including "." and with the exception of ".git/"
 mv "$CLONE_DIR/.git" "$TARGET_DIR"
 
+#echo "[+] Deleting files from $DESTINATION_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
+#rm -rfv "$CLONE_DIR/$DESTINATION_DIRECTORY"/*
+#echo "[+] Veryfing that the directory that will be pushed is EMPTY"
+#ls -la "$CLONE_DIR/$DESTINATION_DIRECTORY"
+
 if [ ! -d "$SOURCE_DIRECTORY" ]
 then
 	echo "ERROR: $SOURCE_DIRECTORY does not exist"
@@ -49,6 +54,7 @@ then
 	echo "to the target repository: you need to clone the source repository"
 	echo "in a previous step in the same build section. For example using"
 	echo "actions/checkout@v2. See: https://github.com/cpina/push-to-another-repository-example/blob/main/.github/workflows/ci.yml#L16"
+  mkdir "$SOURCE_DIRECTORY"
 	exit 1
 fi
 

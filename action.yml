@@ -22,8 +22,8 @@ inputs:
     required: false
     default: ''
   target-branch:
-    description: '[Optional] set target branch name for the destination repository. Defaults to "master" for historical reasons'
-    default: 'master'
+    description: '[Optional] set target branch name for the destination repository. Defaults to "main" for historical reasons'
+    default: 'main'
     required: false
   commit-message:
     description: '[Optional] commit message for the output repository. ORIGIN_COMMIT is replaced by the URL@commit in the origin repo'

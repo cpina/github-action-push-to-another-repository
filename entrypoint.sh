@@ -3,7 +3,7 @@
 set -e  # if a command fails it stops the execution
 set -u  # script fails if trying to access to an undefined variable
 
-echo "Starts"
+echo "[+] Action start"
 SOURCE_DIRECTORY="$1"
 DESTINATION_GITHUB_USERNAME="$2"
 DESTINATION_REPOSITORY_NAME="$3"
@@ -39,9 +39,13 @@ TEMP_DIR=$(mktemp -d)
 # including "." and with the exception of ".git/"
 mv "$CLONE_DIR/.git" "$TEMP_DIR/.git"
 
-echo "[+] Deleting files from $DESTINATION_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
+echo "[+] Checking if $TARGET_DIRECTORY exist in git repo $DESTINATION_REPOSITORY_NAME"
 # Remove contents of target directory and create a new empty one
+if [ -d "$CLONE_DIR/$TARGET_DIRECTORY/" ]
+then
+echo "[+] Deleting files from $TARGET_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
 rm -R "$CLONE_DIR/$TARGET_DIRECTORY/"
+fi
 echo "[+] Creating $TARGET_DIRECTORY if doesnt already exist"
 mkdir -p "$CLONE_DIR/$TARGET_DIRECTORY"
 
@@ -58,12 +62,10 @@ then
 	echo "to the target repository: you need to clone the source repository"
 	echo "in a previous step in the same build section. For example using"
 	echo "actions/checkout@v2. See: https://github.com/cpina/push-to-another-repository-example/blob/main/.github/workflows/ci.yml#L16"
-  mkdir "$SOURCE_DIRECTORY"
 	exit 1
 fi
 
-echo "[+] Copying contents of source repository folder $SOURCE_DIRECTORY to folder $DESTINATION_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
-echo "Copy contents to target git repository"
+echo "[+] Copying contents of source repository folder $SOURCE_DIRECTORY to folder $TARGET_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
 cp -ra "$SOURCE_DIRECTORY"/. "$CLONE_DIR/$TARGET_DIRECTORY"
 cd "$CLONE_DIR"
 

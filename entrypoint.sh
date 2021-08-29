@@ -45,7 +45,7 @@ echo "[+] Checking if $TARGET_DIRECTORY exist in git repo $DESTINATION_REPOSITOR
 if [ -d "$CLONE_DIR/$TARGET_DIRECTORY/" ]
 then
 echo "[+] Deleting files from $TARGET_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
-rm -R "$CLONE_DIR/$TARGET_DIRECTORY/"
+rm -R "${CLONE_DIR:?}/$TARGET_DIRECTORY/"
 fi
 echo "[+] Creating $TARGET_DIRECTORY if doesnt already exist"
 mkdir -p "$CLONE_DIR/$TARGET_DIRECTORY"

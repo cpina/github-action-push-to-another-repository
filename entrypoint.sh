@@ -54,11 +54,11 @@ mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
 
 
 echo "[+] Changing to $SOURCE_BEFORE_DIRECTORY"
-cd $SOURCE_BEFORE_DIRECTORY
+cd "$SOURCE_BEFORE_DIRECTORY"
 
 
 echo "[+] List contecnts of $SOURCE_DIRECTORY"
-ls $SOURCE_DIRECTORY
+ls "$SOURCE_DIRECTORY"
 
 if [ ! -d "$SOURCE_DIRECTORY" ]
 then

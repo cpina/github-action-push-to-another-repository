@@ -52,14 +52,23 @@ mkdir -p "$CLONE_DIR/$TARGET_DIRECTORY"
 
 mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
 
+echo "[+] Listing Current Directory Location"
+ls -al
+#echo "[+] Listing home+ Directory Location"
+#ls -al /home/runner/work/Action_OpenWRT_AutoBuild_Linksys_Devices/Action_OpenWRT_AutoBuild_Linksys_Devices/openwrt
+echo "[+] Listing root Location"
+ls -al /
+echo "[+] Listing /home Location"
+ls -al /home
 
-echo "[+] Changing to $SOURCE_BEFORE_DIRECTORY"
-cd "$SOURCE_BEFORE_DIRECTORY"
+# echo "[+] Changing to $SOURCE_BEFORE_DIRECTORY"
+# cd "$SOURCE_BEFORE_DIRECTORY"
 
 
-echo "[+] List contecnts of $SOURCE_DIRECTORY"
+echo "[+] List contents of $SOURCE_DIRECTORY"
 ls "$SOURCE_DIRECTORY"
 
+echo "[+] Checking if local $SOURCE_DIRECTORY exist"
 if [ ! -d "$SOURCE_DIRECTORY" ]
 then
 	echo "ERROR: $SOURCE_DIRECTORY does not exist"

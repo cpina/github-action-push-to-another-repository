@@ -54,14 +54,14 @@ then
 	echo "[+] Creating $TARGET_DIRECTORY if doesnt already exist"
 	mkdir -p "$CLONE_DIR/$TARGET_DIRECTORY"
 
-	mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
-
 	echo "[+] Listing Current Directory Location"
 	ls -al
 
 	echo "[+] Listing root Location"
 	ls -al /
 fi
+
+mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
 
 echo "[+] List contents of $SOURCE_DIRECTORY"
 ls "$SOURCE_DIRECTORY"

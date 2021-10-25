@@ -1,20 +1,27 @@
-name: 'Push directory to another repository'
-description: 'Useful to push files to another repository to be used, for example, via github pages'
+name: Push directory to another repository directory
+description: >-
+  Useful to push files to another repository to be used, for example, via github
+  pages
 inputs:
+  source-before-directory:
+    description: Source before directory from the origin directory
+    required: false
   source-directory:
-    description: 'Source directory from the origin directory'
+    description: Source directory from the origin directory
     required: true
   destination-github-username:
-    description: 'Name of the destination username/organization'
+    description: Name of the destination username/organization
     required: true
   destination-repository-name:
-    description: 'Destination repository'
+    description: Destination repository
     required: true
   user-email:
-    description: 'Email for the git commit'
+    description: Email for the git commit
     required: true
   user-name:
-    description: '[Optional] Name for the git commit. Defaults to the destination username/organization name'
+    description: >-
+      [Optional] Name for the git commit. Defaults to the destination
+      username/organization name
     required: false
     default: ''
   destination-repository-username:
@@ -22,25 +29,35 @@ inputs:
     required: false
     default: ''
   target-branch:
-    description: '[Optional] set target branch name for the destination repository. Defaults to "master" for historical reasons'
-    default: 'master'
+    description: >-
+      [Optional] set target branch name for the destination repository. Defaults
+      to "main" for historical reasons
+    default: main
     required: false
   commit-message:
-    description: '[Optional] commit message for the output repository. ORIGIN_COMMIT is replaced by the URL@commit in the origin repo'
-    default: 'Update from ORIGIN_COMMIT'
+    description: >-
+      [Optional] commit message for the output repository. ORIGIN_COMMIT is
+      replaced by the URL@commit in the origin repo
+    default: Update from ORIGIN_COMMIT
+    required: false
+  target-directory:
+    description: '[Optional] The directory to wipe and replace in the target repository'
+    default: .
     required: false
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: docker
+  image: Dockerfile
   args:
-    - ${{ inputs.source-directory }}
-    - ${{ inputs.destination-github-username }}
-    - ${{ inputs.destination-repository-name }}
-    - ${{ inputs.user-email }}
-    - ${{ inputs.user-name }}
-    - ${{ inputs.destination-repository-username }}
-    - ${{ inputs.target-branch }}
-    - ${{ inputs.commit-message }}
+    - '${{ inputs.source-before-directory }}'
+    - '${{ inputs.source-directory }}'
+    - '${{ inputs.destination-github-username }}'
+    - '${{ inputs.destination-repository-name }}'
+    - '${{ inputs.user-email }}'
+    - '${{ inputs.user-name }}'
+    - '${{ inputs.destination-repository-username }}'
+    - '${{ inputs.target-branch }}'
+    - '${{ inputs.commit-message }}'
+    - '${{ inputs.target-directory }}'
 branding:
-  icon: 'git-commit'
-  color: 'green'
+  icon: git-commit
+  color: green

@@ -1,4 +1,4 @@
-# github-action-push-to-another-repository
+# github-action-push-to-another-repository-directory
 
 When to use this GitHub Action? It is useful in case that you have a GitHub repository with a a directory that you want to push to another GitHub repository using GitHub Actions (automated on push, for example). It is also useful if using GitHub Actions you generate certain files that you want to push to another GitHub repository.
 
@@ -6,7 +6,7 @@ Flow:
 
 The [example repository](https://github.com/cpina/push-to-another-repository-example) has a MarkDown file [main.md](https://github.com/cpina/push-to-another-repository-example/blob/main/main.md)), during the [GitHub Actions flow](https://github.com/cpina/push-to-another-repository-example/blob/main/.github/workflows/ci.yml#L19) it executes [build.sh](https://github.com/cpina/push-to-another-repository-example/blob/main/build.sh) and the output/ directory (configurable via [source-directory](https://github.com/cpina/push-to-another-repository-example/blob/main/.github/workflows/ci.yml#L27) appears in the [output repository](https://github.com/cpina/push-to-another-repository-output).
 
-Please bear in mind: files in the target repository are deleted. This is to make sure that it contains only the generated files in the last run without previously generated files.
+Please bear in mind: files in the target repository's specified directory are deleted. This is to make sure that it contains only the generated files in the last run without previously generated files.
 
 There are different variables to setup the behaviour:
 
@@ -36,6 +36,9 @@ The branch name for the destination repository. It defaults to `main` for histor
 
 ### `commit-message` (argument) [optional]
 The commit message to be used in the output repository. Optional and defaults to "Update from $REPOSITORY_URL@commit".
+
+### `target-directory` (argument) [optional]
+The directory to wipe and replace in the target repository.  Defaults to wiping the entire repository
 
 The string `ORIGIN_COMMIT` is replaced by `$REPOSITORY_URL@commit`.
 

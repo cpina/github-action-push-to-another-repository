@@ -3,15 +3,17 @@
 set -e  # if a command fails it stops the execution
 set -u  # script fails if trying to access to an undefined variable
 
-echo "Starts"
-SOURCE_DIRECTORY="$1"
-DESTINATION_GITHUB_USERNAME="$2"
-DESTINATION_REPOSITORY_NAME="$3"
-USER_EMAIL="$4"
-USER_NAME="$5"
-DESTINATION_REPOSITORY_USERNAME="$6"
-TARGET_BRANCH="$7"
-COMMIT_MESSAGE="$8"
+echo "[+] Action start"
+SOURCE_BEFORE_DIRECTORY="$1"
+SOURCE_DIRECTORY="$2"
+DESTINATION_GITHUB_USERNAME="$3"
+DESTINATION_REPOSITORY_NAME="$4"
+USER_EMAIL="$5"
+USER_NAME="$6"
+DESTINATION_REPOSITORY_USERNAME="$7"
+TARGET_BRANCH="$8"
+COMMIT_MESSAGE="$9"
+TARGET_DIRECTORY="${10}"
 
 if [ -z "$DESTINATION_REPOSITORY_USERNAME" ]
 then
@@ -25,19 +27,48 @@ fi
 
 CLONE_DIR=$(mktemp -d)
 
-echo "Cloning destination git repository"
+echo "[+] Cloning destination git repository $DESTINATION_REPOSITORY_NAME"
 # Setup git
 git config --global user.email "$USER_EMAIL"
 git config --global user.name "$USER_NAME"
 git clone --single-branch --branch "$TARGET_BRANCH" "https://$USER_NAME:$API_TOKEN_GITHUB@github.com/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" "$CLONE_DIR"
 ls -la "$CLONE_DIR"
 
-TARGET_DIR=$(mktemp -d)
+TEMP_DIR=$(mktemp -d)
 # This mv has been the easier way to be able to remove files that were there
 # but not anymore. Otherwise we had to remove the files from "$CLONE_DIR",
 # including "." and with the exception of ".git/"
-mv "$CLONE_DIR/.git" "$TARGET_DIR"
+mv "$CLONE_DIR/.git" "$TEMP_DIR/.git"
 
+echo "[+] Checking if $TARGET_DIRECTORY exist in git repo $DESTINATION_REPOSITORY_NAME"
+# Remove contents of target directory and create a new empty one
+if [ -d "$CLONE_DIR/$TARGET_DIRECTORY/" ]
+then
+echo "[+] Deleting files from $TARGET_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
+rm -R "${CLONE_DIR:?}/$TARGET_DIRECTORY/"
+fi
+echo "[+] Creating $TARGET_DIRECTORY if doesnt already exist"
+mkdir -p "$CLONE_DIR/$TARGET_DIRECTORY"
+
+mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
+
+echo "[+] Listing Current Directory Location"
+ls -al
+#echo "[+] Listing home+ Directory Location"
+#ls -al /home/runner/work/Action_OpenWRT_AutoBuild_Linksys_Devices/Action_OpenWRT_AutoBuild_Linksys_Devices/openwrt
+echo "[+] Listing root Location"
+ls -al /
+echo "[+] Listing /home Location"
+ls -al /home
+
+# echo "[+] Changing to $SOURCE_BEFORE_DIRECTORY"
+# cd "$SOURCE_BEFORE_DIRECTORY"
+
+
+echo "[+] List contents of $SOURCE_DIRECTORY"
+ls "$SOURCE_DIRECTORY"
+
+echo "[+] Checking if local $SOURCE_DIRECTORY exist"
 if [ ! -d "$SOURCE_DIRECTORY" ]
 then
 	echo "ERROR: $SOURCE_DIRECTORY does not exist"
@@ -52,27 +83,27 @@ then
 	exit 1
 fi
 
-echo "Copy contents to target git repository"
-cp -ra "$SOURCE_DIRECTORY"/. "$TARGET_DIR"
-cd "$TARGET_DIR"
+echo "[+] Copying contents of source repository folder $SOURCE_DIRECTORY to folder $TARGET_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
+cp -ra "$SOURCE_DIRECTORY"/. "$CLONE_DIR/$TARGET_DIRECTORY"
+cd "$CLONE_DIR"
 
-echo "Files that will be pushed:"
+echo "[+] Files that will be pushed"
 ls -la
 
 ORIGIN_COMMIT="https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
 COMMIT_MESSAGE="${COMMIT_MESSAGE/ORIGIN_COMMIT/$ORIGIN_COMMIT}"
 COMMIT_MESSAGE="${COMMIT_MESSAGE/\$GITHUB_REF/$GITHUB_REF}"
 
-echo "git add:"
+echo "[+] Adding git commit"
 git add .
 
-echo "git status:"
+echo "[+] git status:"
 git status
 
-echo "git diff-index:"
+echo "[+] git diff-index:"
 # git diff-index : to avoid doing the git commit failing if there are no changes to be commit
 git diff-index --quiet HEAD || git commit --message "$COMMIT_MESSAGE"
 
-echo "git push origin:"
+echo "[+] Pushing git commit"
 # --set-upstream: sets de branch when pushing to a branch that does not exist
 git push "https://$USER_NAME:$API_TOKEN_GITHUB@github.com/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" --set-upstream "$TARGET_BRANCH"

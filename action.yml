@@ -46,7 +46,7 @@ inputs:
     required: false
   target-directory:
     description: '[Optional] The directory to wipe and replace in the target repository'
-    default: .
+    default: ''
     required: false
         
 runs:

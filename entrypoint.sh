@@ -41,31 +41,30 @@ TEMP_DIR=$(mktemp -d)
 # including "." and with the exception of ".git/"
 mv "$CLONE_DIR/.git" "$TEMP_DIR/.git"
 
-echo "[+] Checking if $TARGET_DIRECTORY exist in git repo $DESTINATION_REPOSITORY_NAME"
-
-# Remove contents of target directory and create a new empty one
-if [ -d "$CLONE_DIR/$TARGET_DIRECTORY/" ]
+if [ -n "$TARGET_DIRECTORY" ]
 then
-	echo "[+] Deleting files from $TARGET_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
-	rm -R "$CLONE_DIR/$TARGET_DIRECTORY/"
+	echo "[+] Checking if $TARGET_DIRECTORY exist in git repo $DESTINATION_REPOSITORY_NAME"
+
+	# Remove contents of target directory and create a new empty one
+	if [ -d "$CLONE_DIR/$TARGET_DIRECTORY/" ]
+	then
+		echo "[+] Deleting files from $TARGET_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
+		rm -R "$CLONE_DIR/$TARGET_DIRECTORY/"
+	fi
+	echo "[+] Creating $TARGET_DIRECTORY if doesnt already exist"
+	mkdir -p "$CLONE_DIR/$TARGET_DIRECTORY"
+
+	mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
+
+	echo "[+] Listing Current Directory Location"
+	ls -al
+
+	echo "[+] Listing root Location"
+	ls -al /
+
+	echo "[+] Listing /home Location"
+	ls -al /home
 fi
-echo "[+] Creating $TARGET_DIRECTORY if doesnt already exist"
-mkdir -p "$CLONE_DIR/$TARGET_DIRECTORY"
-
-mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
-
-echo "[+] Listing Current Directory Location"
-ls -al
-#echo "[+] Listing home+ Directory Location"
-#ls -al /home/runner/work/Action_OpenWRT_AutoBuild_Linksys_Devices/Action_OpenWRT_AutoBuild_Linksys_Devices/openwrt
-echo "[+] Listing root Location"
-ls -al /
-echo "[+] Listing /home Location"
-ls -al /home
-
-# echo "[+] Changing to $SOURCE_BEFORE_DIRECTORY"
-# cd "$SOURCE_BEFORE_DIRECTORY"
-
 
 echo "[+] List contents of $SOURCE_DIRECTORY"
 ls "$SOURCE_DIRECTORY"

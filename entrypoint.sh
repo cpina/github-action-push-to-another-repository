@@ -17,12 +17,12 @@ TARGET_DIRECTORY="${10}"
 
 if [ -z "$DESTINATION_REPOSITORY_USERNAME" ]
 then
-  DESTINATION_REPOSITORY_USERNAME="$DESTINATION_GITHUB_USERNAME"
+	DESTINATION_REPOSITORY_USERNAME="$DESTINATION_GITHUB_USERNAME"
 fi
 
 if [ -z "$USER_NAME" ]
 then
-  USER_NAME="$DESTINATION_GITHUB_USERNAME"
+	USER_NAME="$DESTINATION_GITHUB_USERNAME"
 fi
 
 CLONE_DIR=$(mktemp -d)
@@ -44,8 +44,8 @@ echo "[+] Checking if $TARGET_DIRECTORY exist in git repo $DESTINATION_REPOSITOR
 # Remove contents of target directory and create a new empty one
 if [ -d "$CLONE_DIR/$TARGET_DIRECTORY/" ]
 then
-echo "[+] Deleting files from $TARGET_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
-rm -R "${CLONE_DIR:?}/$TARGET_DIRECTORY/"
+	echo "[+] Deleting files from $TARGET_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
+	rm -R "${CLONE_DIR:?}/$TARGET_DIRECTORY/"
 fi
 echo "[+] Creating $TARGET_DIRECTORY if doesnt already exist"
 mkdir -p "$CLONE_DIR/$TARGET_DIRECTORY"

@@ -32,7 +32,7 @@ The name that will be used for the commit in the destination-repository-name. If
 The Username/Organization for the destination repository, if different from `destination-github-username`. For the repository `https://github.com/cpina/push-to-another-repository-output` is `cpina`.
 
 ### `target-branch` (argument) [optional]
-The branch name for the destination repository. It defaults to `main` for historical reasons, feel free to change it to `main`.
+The branch name for the destination repository. It defaults to `master` for historical reasons, feel free to change it to `main`.
 
 ### `commit-message` (argument) [optional]
 The commit message to be used in the output repository. Optional and defaults to "Update from $REPOSITORY_URL@commit".

@@ -61,9 +61,6 @@ then
 
 	echo "[+] Listing root Location"
 	ls -al /
-
-	echo "[+] Listing /home Location"
-	ls -al /home
 fi
 
 echo "[+] List contents of $SOURCE_DIRECTORY"

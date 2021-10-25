@@ -18,6 +18,10 @@ inputs:
   user-email:
     description: Email for the git commit
     required: true
+  github-server:
+    description: 'Github server'
+    default: 'github.com'
+    required: false
   user-name:
     description: >-
       [Optional] Name for the git commit. Defaults to the destination
@@ -44,6 +48,7 @@ inputs:
     description: '[Optional] The directory to wipe and replace in the target repository'
     default: .
     required: false
+        
 runs:
   using: docker
   image: Dockerfile
@@ -52,6 +57,7 @@ runs:
     - '${{ inputs.source-directory }}'
     - '${{ inputs.destination-github-username }}'
     - '${{ inputs.destination-repository-name }}'
+    - '${{ inputs.github-server }}'
     - '${{ inputs.user-email }}'
     - '${{ inputs.user-name }}'
     - '${{ inputs.destination-repository-username }}'

@@ -10,13 +10,13 @@ inputs:
   destination-repository-name:
     description: 'Destination repository'
     required: true
+  user-email:
+    description: 'Email for the git commit'
+    required: true
   github-server:
     description: 'Github server'
     default: 'github.com'
     required: false
-  user-email:
-    description: 'Email for the git commit'
-    required: true
   user-name:
     description: '[Optional] Name for the git commit. Defaults to the destination username/organization name'
     required: false

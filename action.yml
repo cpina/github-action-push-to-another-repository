@@ -48,7 +48,11 @@ inputs:
     description: '[Optional] The directory to wipe and replace in the target repository'
     default: ''
     required: false
-        
+  force:
+    description: "[Optional] If 'true', will force push and thus overwrite the target repo's history"
+    default: 'false'
+    required: false
+
 runs:
   using: docker
   image: Dockerfile
@@ -64,6 +68,7 @@ runs:
     - '${{ inputs.target-branch }}'
     - '${{ inputs.commit-message }}'
     - '${{ inputs.target-directory }}'
+    - '${{ inputs.force }}'
 branding:
   icon: git-commit
   color: green

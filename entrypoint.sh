@@ -41,25 +41,20 @@ TEMP_DIR=$(mktemp -d)
 # including "." and with the exception of ".git/"
 mv "$CLONE_DIR/.git" "$TEMP_DIR/.git"
 
-if [ -n "$TARGET_DIRECTORY" ]
-then
-	echo "[+] Checking if $TARGET_DIRECTORY exist in git repo $DESTINATION_REPOSITORY_NAME"
+# $TARGET_DIRECTORY is '' by default
+ABSOLUTE_TARGET_DIRECTORY="$CLONE_DIR/$TARGET_DIRECTORY/"
 
-	# Remove contents of target directory and create a new empty one
-	if [ -d "$CLONE_DIR/$TARGET_DIRECTORY/" ]
-	then
-		echo "[+] Deleting files from $TARGET_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
-		rm -R "$CLONE_DIR/$TARGET_DIRECTORY/"
-	fi
-	echo "[+] Creating $TARGET_DIRECTORY if it does not already exist"
-	mkdir -p "$CLONE_DIR/$TARGET_DIRECTORY"
+echo "[+] Deleting $ABSOLUTE_TARGET_DIRECTORY"
+rm -rf "$ABSOLUTE_TARGET_DIRECTORY"
 
-	echo "[+] Listing Current Directory Location"
-	ls -al
+echo "[+] Creating (now empty) $ABSOLUTE_TARGET_DIRECTORY"
+mkdir -p "$ABSOLUTE_TARGET_DIRECTORY"
 
-	echo "[+] Listing root Location"
-	ls -al /
-fi
+echo "[+] Listing Current Directory Location"
+ls -al
+
+echo "[+] Listing root Location"
+ls -al /
 
 mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
 

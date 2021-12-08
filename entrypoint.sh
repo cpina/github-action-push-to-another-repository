@@ -51,7 +51,7 @@ then
 		echo "[+] Deleting files from $TARGET_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
 		rm -R "$CLONE_DIR/$TARGET_DIRECTORY/"
 	fi
-	echo "[+] Creating $TARGET_DIRECTORY if doesnt already exist"
+	echo "[+] Creating $TARGET_DIRECTORY if it does not already exist"
 	mkdir -p "$CLONE_DIR/$TARGET_DIRECTORY"
 
 	echo "[+] Listing Current Directory Location"

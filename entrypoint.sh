@@ -26,13 +26,21 @@ then
 	USER_NAME="$DESTINATION_GITHUB_USERNAME"
 fi
 
+TARGET_BRANCH_EXISTS=true
+
 CLONE_DIR=$(mktemp -d)
 
 echo "[+] Cloning destination git repository $DESTINATION_REPOSITORY_NAME"
 # Setup git
 git config --global user.email "$USER_EMAIL"
 git config --global user.name "$USER_NAME"
-git clone --single-branch --branch "$TARGET_BRANCH" "https://$USER_NAME:$API_TOKEN_GITHUB@$GITHUB_SERVER/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" "$CLONE_DIR"
+{
+  git clone --single-branch --branch "$TARGET_BRANCH" "https://$USER_NAME:$API_TOKEN_GITHUB@$GITHUB_SERVER/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" "$CLONE_DIR"
+} || {
+  echo "Target branch doesn't exist, fetching main branch"
+  git clone --single-branch "https://$USER_NAME:$API_TOKEN_GITHUB@$GITHUB_SERVER/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" "$CLONE_DIR"
+  TARGET_BRANCH_EXISTS=false
+}
 ls -la "$CLONE_DIR"
 
 TEMP_DIR=$(mktemp -d)
@@ -86,6 +94,11 @@ ls -la
 ORIGIN_COMMIT="https://$GITHUB_SERVER/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
 COMMIT_MESSAGE="${COMMIT_MESSAGE/ORIGIN_COMMIT/$ORIGIN_COMMIT}"
 COMMIT_MESSAGE="${COMMIT_MESSAGE/\$GITHUB_REF/$GITHUB_REF}"
+
+if [ "$TARGET_BRANCH_EXISTS" = false ] ; then
+  echo "Creating branch $TARGET_BRANCH"
+  git checkout -b "$TARGET_BRANCH"
+fi
 
 echo "[+] Adding git commit"
 git add .

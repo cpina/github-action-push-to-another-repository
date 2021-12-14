@@ -38,9 +38,9 @@ GIT_CLONE_EXIT_CODE=$?
 
 if [ "$GIT_CLONE_EXIT_CODE" != 0 ]
 then
-	echo "Could not clone the destination repository. Tried with:" >&2
-	echo "git clone --single-branch --branch $TARGET_BRANCH https://$USER_NAME:the_api_token@$GITHUB_SERVER/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git $CLONE_DIR" >&2
-	echo "Please verify that the branch $TARGET_BRANCH exist in the target repository and that the repository exist and is accessible by your API_TOKEN_GITHUB" >&2
+	echo "::error::Could not clone the destination repository. Tried with:"
+	echo "::error::git clone --single-branch --branch $TARGET_BRANCH https://$USER_NAME:the_api_token@$GITHUB_SERVER/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git $CLONE_DIR"
+	echo "::error::Please verify that the branch $TARGET_BRANCH exist in the target repository and that the repository exist and is accessible by your API_TOKEN_GITHUB"
 	exit 1
 fi
 

@@ -32,7 +32,18 @@ echo "[+] Cloning destination git repository $DESTINATION_REPOSITORY_NAME"
 # Setup git
 git config --global user.email "$USER_EMAIL"
 git config --global user.name "$USER_NAME"
-git clone --single-branch --branch "$TARGET_BRANCH" "https://$USER_NAME:$API_TOKEN_GITHUB@$GITHUB_SERVER/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" "$CLONE_DIR"
+
+=git clone --single-branch --branch "$TARGET_BRANCH" "https://$USER_NAME:$API_TOKEN_GITHUB@$GITHUB_SERVER/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" "$CLONE_DIR"
+GIT_CLONE_EXIT_CODE=$?
+
+if [ "$GIT_CLONE_EXIT_CODE" != 0 ]
+then
+	echo "Could not clone the destination repository. Tried with:" >&2
+	echo "git clone --single-branch --branch $TARGET_BRANCH https://$USER_NAME:the_api_token@$GITHUB_SERVER/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git $CLONE_DIR" >&2
+	echo "Please verify that the branch $TARGET_BRANCH exist in the target repository and that the repository exist and is accessible by your API_TOKEN_GITHUB" >&2
+	exit 1
+fi
+
 ls -la "$CLONE_DIR"
 
 TEMP_DIR=$(mktemp -d)

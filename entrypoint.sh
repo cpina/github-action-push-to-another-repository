@@ -38,7 +38,8 @@ git config --global user.name "$USER_NAME"
 } || {
 	echo "::error::Could not clone the destination repository. Command:"
 	echo "::error::git clone --single-branch --branch $TARGET_BRANCH https://$USER_NAME:the_api_token@$GITHUB_SERVER/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git $CLONE_DIR"
-	echo "::error::Please verify that the branch $TARGET_BRANCH exist in the target repository and that the repository exist and is accessible by your API_TOKEN_GITHUB"
+	echo "::error::(Note that the USER_NAME and API_TOKEN is redacted by GitHub)"
+	echo "::error::Please verify that the target repository exist AND that it contains the destination branch name, and is accesible by the API_TOKEN_GITHUB"
 	exit 1
 
 }

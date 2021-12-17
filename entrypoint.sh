@@ -15,6 +15,7 @@ DESTINATION_REPOSITORY_USERNAME="$8"
 TARGET_BRANCH="$9"
 COMMIT_MESSAGE="${10}"
 TARGET_DIRECTORY="${11}"
+FORCE="${12}"
 
 if [ -z "$DESTINATION_REPOSITORY_USERNAME" ]
 then
@@ -107,6 +108,14 @@ echo "[+] git diff-index:"
 # git diff-index : to avoid doing the git commit failing if there are no changes to be commit
 git diff-index --quiet HEAD || git commit --message "$COMMIT_MESSAGE"
 
-echo "[+] Pushing git commit"
+if $FORCE; then
+  echo "[+] Force pushing git commit"
+  FORCE_FLAG="-f"
+else
+  echo "[+] Pushing git commit"
+  FORCE_FLAG=""
+fi
 # --set-upstream: sets de branch when pushing to a branch that does not exist
-git push "https://$USER_NAME:$API_TOKEN_GITHUB@$GITHUB_SERVER/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" --set-upstream "$TARGET_BRANCH"
+git push "https://$USER_NAME:$API_TOKEN_GITHUB@$GITHUB_SERVER/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" \
+ --set-upstream "$TARGET_BRANCH" \
+ "$FORCE_FLAG"

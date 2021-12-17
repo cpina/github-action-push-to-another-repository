@@ -42,6 +42,10 @@ The directory to wipe and replace in the target repository.  Defaults to wiping 
 
 The string `ORIGIN_COMMIT` is replaced by `$REPOSITORY_URL@commit`.
 
+### `force` (argument) [optional]
+If "true", will force push to the target repo. Use with caution
+
+
 ### `API_TOKEN_GITHUB` (environment)
 E.g.:
   `API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}`

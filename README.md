@@ -1,4 +1,4 @@
-# github-action-push-to-another-repository-directory
+# github-action-push-to-another-repository
 
 When to use this GitHub Action? It is useful in case that you have a GitHub repository with a a directory that you want to push to another GitHub repository using GitHub Actions (automated on push, for example). It is also useful if using GitHub Actions you generate certain files that you want to push to another GitHub repository.
 
@@ -37,10 +37,10 @@ The branch name for the destination repository. It defaults to `main`.
 ### `commit-message` (argument) [optional]
 The commit message to be used in the output repository. Optional and defaults to "Update from $REPOSITORY_URL@commit".
 
+The string `ORIGIN_COMMIT` is replaced by `$REPOSITORY_URL@commit`.
+
 ### `target-directory` (argument) [optional]
 The directory to wipe and replace in the target repository.  Defaults to wiping the entire repository
-
-The string `ORIGIN_COMMIT` is replaced by `$REPOSITORY_URL@commit`.
 
 ### `API_TOKEN_GITHUB` (environment)
 E.g.:

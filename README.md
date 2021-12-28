@@ -37,10 +37,10 @@ The branch name for the destination repository. It defaults to `main`.
 ### `commit-message` (argument) [optional]
 The commit message to be used in the output repository. Optional and defaults to "Update from $REPOSITORY_URL@commit".
 
+The string `ORIGIN_COMMIT` is replaced by `$REPOSITORY_URL@commit`.
+
 ### `target-directory` (argument) [optional]
 The directory to wipe and replace in the target repository.  Defaults to wiping the entire repository
-
-The string `ORIGIN_COMMIT` is replaced by `$REPOSITORY_URL@commit`.
 
 ### `API_TOKEN_GITHUB` (environment)
 E.g.:

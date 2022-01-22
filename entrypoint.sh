@@ -1,10 +1,10 @@
-#!/bin/sh -l
+#!/bin/sh
+# shellcheck disable=SC3060
 
 set -e  # if a command fails it stops the execution
 set -u  # script fails if trying to access to an undefined variable
 
 echo "[+] Action start"
-SOURCE_BEFORE_DIRECTORY="${1}"
 SOURCE_DIRECTORY="${2}"
 DESTINATION_GITHUB_USERNAME="${3}"
 DESTINATION_REPOSITORY_NAME="${4}"

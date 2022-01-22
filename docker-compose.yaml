@@ -1,0 +1,8 @@
+---
+version: '3.9'
+services:
+  shellcheck:
+    image: koalaman/shellcheck-alpine:latest
+    volumes:
+      - ".:/build"
+    working_dir: /build

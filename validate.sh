@@ -1,11 +1,13 @@
-#!/bin/sh -l
+#!/bin/sh
+# shellcheck disable=SC2044
 
-set -euo pipefile
+set -eu pipefile
 
 rc=0
 for filename in $(find ./* -name '*.sh'); do
-  echo "Validating"
+  echo "Start to validating ${filename}"
   shellcheck "${filename}" || exit $?
+  echo "🚀Successfully Validated ${filename}"
 done
 
-exit $?
+exit $rc

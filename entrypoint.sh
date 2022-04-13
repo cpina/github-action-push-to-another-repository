@@ -34,7 +34,7 @@ git --version
 echo "[+] Add everything is safe"
 # Related to https://github.com/cpina/github-action-push-to-another-repository/issues/64 and https://github.com/cpina/github-action-push-to-another-repository/issues/64
 # TODO: review before releasing it as a version
-git config --add safe.directory /
+git config --global --add safe.directory /
 
 echo "[+] Cloning destination git repository $DESTINATION_REPOSITORY_NAME"
 # Setup git

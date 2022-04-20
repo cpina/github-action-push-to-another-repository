@@ -48,6 +48,9 @@ inputs:
     description: '[Optional] The directory to wipe and replace in the target repository'
     default: ''
     required: false
+  commit-tag:
+    description: '[Optional] The tag that should be applied to the commit'
+    required: false
         
 runs:
   using: docker
@@ -64,6 +67,7 @@ runs:
     - '${{ inputs.target-branch }}'
     - '${{ inputs.commit-message }}'
     - '${{ inputs.target-directory }}'
+    - '${{ inputs.commit-tag }}'
 branding:
   icon: git-commit
   color: green

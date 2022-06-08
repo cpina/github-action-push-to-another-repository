@@ -26,6 +26,31 @@ then
 	USER_NAME="$DESTINATION_GITHUB_USERNAME"
 fi
 
+# Verify that there (potentially) some access to the destination repository
+# and set up git (with GIT_CMD variable) and GIT_CMD_REPOSITORY
+if [ -n "${SSH_DEPLOY_KEY:=}" ]
+then
+	# Inspired by https://github.com/leigholiver/commit-with-deploy-key/blob/main/entrypoint.sh , thanks!
+	mkdir --parents "$HOME/.ssh"
+	DEPLOY_KEY_FILE="$HOME/.ssh/deploy_key"
+	echo "${SSH_DEPLOY_KEY}" > "$DEPLOY_KEY_FILE"
+	chmod 600 "$DEPLOY_KEY_FILE"
+
+	SSH_KNOWN_HOSTS_FILE="$HOME/.ssh/known_hosts"
+	ssh-keyscan -H github.com > "$SSH_KNOWN_HOSTS_FILE"
+
+	export GIT_SSH_COMMAND="ssh -i "$DEPLOY_KEY_FILE" -o UserKnownHostsFile=$SSH_KNOWN_HOSTS_FILE"
+
+	GIT_CMD_REPOSITORY="git@$GITHUB_SERVER:$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git"
+
+elif [ -n "${API_TOKEN_GITHUB:=}" ]
+	GIT_CMD_REPOSITORY="https://$DESTINATION_REPOSITORY_USERNAME:the_api_token@$GITHUB_SERVER/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git"
+then
+	echo "::error::API_TOKEN_GITHUB and SSH_DEPLOY_KEY are empty. Please fill one (recommended the SSH_DEPLOY_KEY"
+	exit 1
+fi
+
+
 CLONE_DIR=$(mktemp -d)
 
 echo "[+] Git version"
@@ -37,12 +62,12 @@ git config --global user.email "$USER_EMAIL"
 git config --global user.name "$USER_NAME"
 
 {
-	git clone --single-branch --branch "$TARGET_BRANCH" "https://$DESTINATION_REPOSITORY_USERNAME:$API_TOKEN_GITHUB@$GITHUB_SERVER/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" "$CLONE_DIR"
+	git clone --single-branch --branch "$TARGET_BRANCH" "$GIT_CMD_REPOSITORY" "$CLONE_DIR"
 } || {
 	echo "::error::Could not clone the destination repository. Command:"
-	echo "::error::git clone --single-branch --branch $TARGET_BRANCH https://$DESTINATION_REPOSITORY_USERNAME:the_api_token@$GITHUB_SERVER/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git $CLONE_DIR"
-	echo "::error::(Note that USER_NAME and API_TOKEN is redacted by GitHub)"
-	echo "::error::Please verify that the target repository exist AND that it contains the destination branch name, and is accesible by the API_TOKEN_GITHUB"
+	echo "::error::git clone --single-branch --branch $TARGET_BRANCH $GIT_CMD_REPOSITORY $CLONE_DIR"
+	echo "::error::(Note that if they exist USER_NAME and API_TOKEN is redacted by GitHub)"
+	echo "::error::Please verify that the target repository exist AND that it contains the destination branch name, and is accesible by the API_TOKEN_GITHUB OR SSH_DEPLOY_KEY"
 	exit 1
 
 }
@@ -117,4 +142,4 @@ git diff-index --quiet HEAD || git commit --message "$COMMIT_MESSAGE"
 
 echo "[+] Pushing git commit"
 # --set-upstream: sets de branch when pushing to a branch that does not exist
-git push "https://$USER_NAME:$API_TOKEN_GITHUB@$GITHUB_SERVER/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" --set-upstream "$TARGET_BRANCH"
+git push "$GIT_CMD_REPOSITORY" --set-upstream "$TARGET_BRANCH"

@@ -20,7 +20,7 @@ For the repository `https://github.com/cpina/push-to-another-repository-output` 
 ### `destination-repository-name` (argument)
 For the repository `https://github.com/cpina/push-to-another-repository-output` is `push-to-another-repository-output`
 
-*Warning:* this Github Action currently deletes all the files and directories in the destination repository. The idea is to copy from an `output` directory into the `destination-repository-name` having a copy without any previous files there.
+*Warning:* this GitHub Action currently deletes all the files and directories in the destination repository. The idea is to copy from an `output` directory into the `destination-repository-name` having a copy without any previous files there.
 
 ### `user-email` (argument)
 The email that will be used for the commit in the destination-repository-name.
@@ -52,10 +52,14 @@ Generate your personal token following the steps:
 * Click on "Personal Access Tokens" (also available at https://github.com/settings/tokens)
 * Generate a new token, choose "Repo". Copy the token.
 
+⚠️  : The "Personal Access Token" that you just generated gives access to any repository to which you have access (it's not possible to restrict it to one repository). Technically anyone with *write* access to a repository where the token is made available via "Add a new secret" (next step), might manage to access it. The action also uses the token; you can verify how it is used in entrypoint.sh . I'm in the process of implementing deploy keys which would allow it to give access to only the destination repository. Updates on https://github.com/cpina/github-action-push-to-another-repository/issues/66 . Possible workaround for now: use a specific GitHub user who has access only to the destination repository.
+
 Then make the token available to the Github Action following the steps:
 * Go to the Github page for the repository that you push from, click on "Settings"
 * On the left hand side pane click on "Secrets"
 * Click on "Add a new secret" and name it "API_TOKEN_GITHUB"
+
+
 
 ## Example usage
 ```yaml

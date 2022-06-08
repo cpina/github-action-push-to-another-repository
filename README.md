@@ -54,11 +54,12 @@ Generate your personal token following the steps:
 
 ⚠️  : The "Personal Access Token" that you just generated gives access to any repository to which you have access (it's not possible to restrict it to one repository). Technically anyone with *write* access to a repository where the token is made available via "Add a new secret" (next step), might manage to access it. The action also uses the token; you can verify how it is used in entrypoint.sh . I'm in the process of implementing deploy keys which would allow it to give access to only the destination repository. Updates on https://github.com/cpina/github-action-push-to-another-repository/issues/66 . Possible workarounds to avoid it: use a specific GitHub user who has access only to the destination repository or look at this other action: https://github.com/leigholiver/commit-with-deploy-key
 
+**News: ** new branch https://github.com/cpina/github-action-push-to-another-repository/tree/ssh-deploy-key allowing to use SSH_DEPLOY_KEYS. I will do some more testing and write documentation soon.
+
 Then make the token available to the Github Action following the steps:
 * Go to the Github page for the repository that you push from, click on "Settings"
 * On the left hand side pane click on "Secrets"
 * Click on "Add a new secret" and name it "API_TOKEN_GITHUB"
-
 
 
 ## Example usage

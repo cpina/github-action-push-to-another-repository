@@ -52,7 +52,10 @@ Generate your personal token following the steps:
 * Click on "Personal Access Tokens" (also available at https://github.com/settings/tokens)
 * Generate a new token, choose "Repo". Copy the token.
 
-⚠️  : The "Personal Access Token" that you just generated gives access to any repository to which you have access (it's not possible to restrict it to one repository). Technically anyone with *write* access to a repository where the token is made available via "Add a new secret" (next step), might manage to access it. The action also uses the token; you can verify how it is used in entrypoint.sh . I'm in the process of implementing deploy keys which would allow it to give access to only the destination repository. Updates on https://github.com/cpina/github-action-push-to-another-repository/issues/66 . Possible workarounds to avoid it: use a specific GitHub user who has access only to the destination repository or look at this other action: https://github.com/leigholiver/commit-with-deploy-key
+⚠️  : The "Personal Access Token" that you just generated gives access to any repository to which you have access (it's not possible to restrict it to one repository). Technically anyone with *write* access to a repository where the token is made available via "Add a new secret" (next step), might manage to access it. The action also uses the token; you can verify how it is used in entrypoint.sh . Possible work arounds if you don't want to use the personal access token:
+ * Use this action's `ssh-deploy-key` branch. I need to write documentation for this (possibly the next 24 hours, but you create a deploy key and add the private key as a variable in the pushing repository. See updates on https://github.com/cpina/github-action-push-to-another-repository/issues/66
+ * Use this other action: https://github.com/leigholiver/commit-with-deploy-key
+ * Create a new GitHub user, give access to your destination repository and use this user for the personal access token
 
 **News: ** new branch https://github.com/cpina/github-action-push-to-another-repository/tree/ssh-deploy-key allowing to use SSH_DEPLOY_KEYS. I will do some more testing and write documentation soon.
 

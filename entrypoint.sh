@@ -30,6 +30,8 @@ fi
 # and set up git (with GIT_CMD variable) and GIT_CMD_REPOSITORY
 if [ -n "${SSH_DEPLOY_KEY:=}" ]
 then
+	echo "[+] Using SSH_DEPLOY_KEY"
+
 	# Inspired by https://github.com/leigholiver/commit-with-deploy-key/blob/main/entrypoint.sh , thanks!
 	mkdir --parents "$HOME/.ssh"
 	DEPLOY_KEY_FILE="$HOME/.ssh/deploy_key"
@@ -45,9 +47,10 @@ then
 
 elif [ -n "${API_TOKEN_GITHUB:=}" ]
 then
+	echo "[+] Using API_TOKEN_GITHUB"
 	GIT_CMD_REPOSITORY="https://$DESTINATION_REPOSITORY_USERNAME:$API_TOKEN_GITHUB@$GITHUB_SERVER/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git"
 else
-	echo "::error::API_TOKEN_GITHUB and SSH_DEPLOY_KEY are empty. Please fill one (recommended the SSH_DEPLOY_KEY"
+	echo "::error::API_TOKEN_GITHUB and SSH_DEPLOY_KEY are empty. Please fill one (recommended the SSH_DEPLOY_KEY)"
 	exit 1
 fi
 

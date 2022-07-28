@@ -68,53 +68,148 @@ There are two options to do this:
  * Create an SSH deploy key. This key is restricted to the destination repository only
  * Create a GitHub Personal Authentication Token: the token has access to all your repositories
 
-Someone with write access to your repository or this action, could technically add code to leak the key. Thus, *it is recommended to use the SSH deploy key method to minimise repercusions* if this was the case.
+Someone with write access to your repository or this action, could technically add code to leak the key. Thus, *it is recommended to use the SSH deploy key method to minimise the impact* if this was the case.
 
 This action supports both methods to keep backwards compatibility, because in the beginning it only supported the GitHub Personal Authentication token.
 
 ### Set up using SSH deploy key
+
+Recommended, a bit harder (more steps) to setup compared with the Personal Access Token.
+
 #### Generate the key files
 
-* `ssh-keygen -t ed25519 -C "your_email@example.com"` (the type ed25519 is recommended by [GitHub documentation](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key))
-* ssh will ask for a file path: `Enter file in which to save the key`: write a new file name. I suggest the default directory and as a filename: `id_github_name_of_your_repository` to avoid overwriting a previous file. If you will be using this action for multiple repositories, you might want to generate different keys for each one. 
-* Leave the passphrase empty (otherwise we would need to pass the passphrase to the GitHub Action)
+ * In your computer terminal generate an ssh key using: `ssh-keygen -t ed25519 -C "your_email@example.com"` (the type ed25519 is recommended by [GitHub documentation](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key)).
+ * ssh will ask for a file path: `Enter file in which to save the key`: write a new file name. I suggest the default directory and as a filename: `id_github_{name_of_your_destination_repository}` to avoid overwriting a previous file. If you will be using this action for multiple repositories, you might want to generate different keys for each one. For the repository `https://github.com/cpina/push-to-another-repository-example/` you could use `id_github_push-to-another-repository-example`.
+ * Leave the passphrase empty (otherwise the GitHub Action cannot use it)
+
+Example:
+```
+carles@pinux:~$ ssh-keygen -t ed25519 -C carles@pina.cat
+Generating public/private ed25519 key pair.
+Enter file in which to save the key (/home/carles/.ssh/id_ed25519): /home/carles/.ssh/id_ed255^C
+carles@pinux:~$ ssh-keygen -t ed25519 -C carles@pina.cat
+Generating public/private ed25519 key pair.
+Enter file in which to save the key (/home/carles/.ssh/id_ed25519): /home/carles/.ssh/id_github_push-to-another-repository
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/carles/.ssh/id_github_push-to-another-repository
+Your public key has been saved in /home/carles/.ssh/id_github_push-to-another-repository.pub
+The key fingerprint is:
+SHA256:qkWM49d0ecTh+d9/CoRIv/N05oYGYvu+wOreQH9PoQ4 carles@pina.cat
+The key's randomart image is:
++--[ED25519 256]--+
+|            .    |
+|           o o   |
+|        .   =    |
+|     o . o + .   |
+|    o + S = + .  |
+|   . + *o..= . ..|
+|    . =.Eo=.+.o o|
+|     + +.= *o=. o|
+|    .o+ .o=oo.o.o|
++----[SHA256]-----+
+carles@pinux:~$ 
+```
+
+This has generated two files, the ssh public key and private key:
+```
+carles@pinux:~$ ls -l /home/carles/.ssh/id_github_push-to-another-repository*
+-rw------- 1 carles carles 411 Jul 28 09:40 /home/carles/.ssh/id_github_push-to-another-repository
+-rw-r--r-- 1 carles carles  97 Jul 28 09:40 /home/carles/.ssh/id_github_push-to-another-repository.pub
+carles@pinux:~$ 
+```
 
 #### Set up the deployment key
 
 #### Destination repository
 
-* Go to the GitHub page of the destination repository
-* Click on "Settings" (settings for the repository, not the account settings)
-* On the left-hand side pane click on "Deploy keys"
-* Click on "Add deploy key"
-* Title: "GitHub Action push to another repository"
-* Key: paste the contents of the file with the public key. This was generated in the "Generate the key files" step and the name is "id_github_name_of_your_repository.pub"
-* Enable "Allow write access"barbar
+In this section we will add the generated public key in the destination repository. This is to make the Action able to push there. Text instructions:
+
+ * Go to the GitHub page of the **destination** repository (e.g. https://github.com/cpina/push-to-another-repository-output)
+ * Click on "Settings" (settings for the repository, not the account settings)
+  
+    ![Screenshot-settings](docs/screenshots/ssh-key-10.png)
+
+ * On the left-hand side pane click on "Deploy keys"
+ 
+    ![Screenshot-deploy-keys](docs/screenshots/ssh-key-20.png)
+
+ * Click on "Add deploy key"
+ 
+    ![Screenshot-add-deploy-key](docs/screenshots/ssh-key-30.png)
+
+ * Title: "GitHub Action push to another repository"
+ * Key: paste the contents of the file with the public key. This was generated in the "Generate the key files" step and the name is "id_github_name_of_your_repository.pub"
+ * **Enable** "Allow write access"
+
+    ![Screenshot-title-key-enable](docs/screenshots/ssh-key-40.png)
+
 
 #### Origin repository
 
-* Go to the GitHub page of the origin repository
-* On the left-hand side pane click on "Secrets" and then on "Actions"
-* Click on "New repository secret"
-* Name: "SSH_DEPLOY_KEY"
-* Value: paste the contents of the file with the private key. This was generated in the "Generate the key files" step and the name is "id_github_name_of_your_repository"
+ * Go to the GitHub page of the origin repository (e.g. https://github.com/cpina/push-to-another-repository-deploy-keys-example)
+
+ * Click on the "Settings" (settings for the repository, not the account settings))
+
+    ![Screenshot-settings](docs/screenshots/ssh-key-10.png)
+
+ * On the left-hand side pane click on "Secrets" and then on "Actions"
+
+    ![Screenshot-secrets-actions](docs/screenshots/ssh-key-50.png)
+
+ * Click on "New repository secret"
+
+    ![Screenshot-new-repository-secret](docs/screenshots/ssh-key-60.png)
+
+ * Name: "SSH_DEPLOY_KEY"
+ * Value: paste the contents of the file with the private key. This was generated in the "Generate the key files" step and the name is "id_github_name_of_your_repository"
+
+    ![Screenshot-ssh-deploy-key-private-key](docs/screenshots/ssh-key-70.png)
+
+The GitHub Action will detect the SSH_DEPLOY_KEY secret and use the private key to push to the destination directory.
+
+Please read the [Troubleshooting](#troubleshooting) section if you encounter problems to find how to debug possible problems.
 
 ### Set up using personal access token
 
-You don't need to do this if you chose to set up the deploy keys using the steps above. This method is here for compatibility with the initial approach of this GitHub Action. The personal access token would have access to all your repositories, so if it were to be leaked the damage would be greater.
+You don't need to do this if you chose to set up the deploy keys using the steps above. This method is here for compatibility with the initial approach of this GitHub Action. The personal access token would have access to all your repositories, so if it were to be leaked the damage would be greater (push to the same repositories that the Personal Access Token owner has access and other possible associated permissions). On the other hand the setup is a bit easier because it does not involve creating the key.
 
 Generate your personal token following the steps:
-* Go to the GitHub Settings (on the right-hand side on the profile picture)
-* On the left-hand side pane click on "Developer Settings"
-* Click on "Personal Access Tokens" (also available at https://github.com/settings/tokens)
-* Generate a new token, choose "Repo". Copy the token.
+ * Go to the general GitHub Settings (on the right-hand side on the profile picture)
 
-Then make the token available to the Github Action following the steps:
-* Go to the GitHub page for the repository that you push from. Click on "Settings"
-* On the left-hand side pane click on "Secrets" then "Actions"
-* Click on "New repository secret"
-* Name: "API_TOKEN_GITHUB"
-* Value: paste the token that you copied earlier
+    ![Screenshot-settings](docs/screenshots/pat-10.png)
+
+ * On the left-hand side pane, scroll to the bottom and click on "Developer Settings"
+
+    ![Screenshot-developer-settings](docs/screenshots/pat-20.png)
+
+ * Click on "Personal Access Tokens" (also available at https://github.com/settings/tokens)
+
+    ![Screenshot-personal-access-token](docs/screenshots/pat-30.png)
+   
+ * Generate a new token entering a name, Expiration date and choose "Repo". Click the bottom button "Generate token". If you choose an expiration date you will need to create a new token after it. I've chosen in this example "No expiration", use carefully.
+
+    ![Screenshot-personal-access-token-comment-expiration-scope](docs/screenshots/pat-40.png)
+
+ * The token is displayed, copy it
+
+    ![Screenshot-personal-access-token-comment-displayed](docs/screenshots/pat-50.png)
+
+Then make the token available to the GitHub Action following the steps:
+ * Go to the GitHub page for the repository that you push from (**origin repository**). Click on "Settings" for the repository
+
+    ![Screenshot-secrets-actions](docs/screenshots/ssh-key-50.png)
+
+ * Click on "New repository secret"
+
+    ![Screenshot-new-repository-secret](docs/screenshots/ssh-key-60.png)
+
+ * Name: "API_TOKEN_GITHUB"
+ * Value: paste the token that you copied earlier
+ * Click on "Add secret"
+
+    ![Screenshot-new-repository-secret](docs/screenshots/pat-70.png)
+
 
 #### Example usage
 ```yaml
@@ -142,7 +237,133 @@ https://github.com/cpina/push-to-another-repository-deploy-keys-example
 To:
 https://github.com/cpina/push-to-another-repository-output
 
-
 ## Troubleshooting
 
+### Cannot push to the destination repository
+
+This is the most common problem. The first suggestion is to follow the steps to create the ssh keys or Personal Access Token and set it up again.
+
+In the GitHub Action pages of the source repository: read carefully the logs. The action tries to write the errors and possible solutions / hints.
+
+Some problems that had happened in the past:
+
+ * User was logged in GitHub with an account that did not have permission to push into the destination repository. The action could not push (permission denied).
+
+ * Token expired at some point
+
+ * ssh generated key pair (public/private) was set in the wrong way, copy-paste errors, etc.
+
+ * Wrong copy-paste including spaces or other characters that did not belong to the key / token 
+
+The easier way might be to try to follow the steps again.
+
+### How to test the Personal Access Token?
+
+This might help understanding if the Personal Access Token that you generated have permissions to push to the destination repository. It could be expired, it could have the wrong permissions. It could be that the user that generated the Personal Access Token did not have permission to push into the destination repository.
+
+For this you need the Personal Access Token and then in your terminal:
+
+```
+$ git clone https://YOUR_USERNAME:YOUR_ACCESS_TOKEN@github.com/SOMETHING/REPO
+# YOUR_ACCESS_TOKEN probably starts with ghp_
+$ cd REPO
+$ git checkout -b test
+$ git push origin test
+```
+
+For example, if the token did not have permission to write (because `repo` was not enabled for this token):
+```
+$ git push origin test
+remote: Permission to cpina/qdacco.git denied to cpina.
+fatal: unable to access 'https://github.com/cpina/qdacco/': The requested URL returned error: 403
+```
+
+### How to test the ssh keys?
+
+#### Test connection to GitHub using the key pair
+
+You should have added the public key into the repository (as SSH deploy key, following the documentation).
+
+Once done, in your computer:
+```
+$ ssh -o IdentitiesOnly=yes -i .ssh/id_push-to-another-repository-output_ed25519 git@github.com
+```
+
+Instead of `.ssh/id_push-to-another-repository-output_ed25519` use the file as you created it. This is the **private** key (it does not end with `.pub`). If you used the right private key for the correctly uploaded public key it will print something along the lines of:
+```
+Hi cpina! You've successfully authenticated, but GitHub does not provide shell access.
+Connection to github.com closed.
+```
+
+If you see:
+```
+git@github.com: Permission denied (publickey).
+```
+
+The public key for this private key is not available on GitHub.
+
+#### Verify that the key is in the right repository
+
+```
+$ ssh-keygen -lf .ssh/id_push-to-another-repository-output_ed25519
+```
+The output will be like:
+```
+256 SHA256:SOME_STRING_OF_CHARACTERS carles@pina.cat (ED25519)
+```
+
+This should match what you see in the deploy key of the destination repository. If it does not match the deploy key is not properly set (you used different public/private key, etc.).
+
+##### Permission of the key
+
+Visualise the key in the destination repository, and it should say:
+```
+Read/Write
+```
+
 ## FAQ
+
+### How can I copy the whole repository?
+
+Use `source_directory: .`. This will copy all the source GitHub repository to the destination.
+
+:warning: this will also copy `.github/workflows/`! The destination repository will try to execute the action. It will probably fail because the Personal Acccess Token / ssh keys will not be available to the destination repository.
+
+Suggestion if you are using `source_directory: .` is to disable the GitHub Actions in the destination repository. To disable Actions in the destination repository:
+
+ * Go to the destination repository (e.g. https://github.com/cpina/push-to-another-repository-output/settings)
+ * Click on "Settings"
+ * On the left side bar click on "Actions" and then "General"
+ * Click on "Disable actions"
+ * Click on "Save"
+
+### How can I copy only some files / only some directories / exclude some files / etc.
+
+The GitHub Action has some configuration options, but they will not suit all the possible uses cases for everyone. I'm trying to avoid adding more and more parameters to suit all the use cases and the reason is that it's then hard to test all the parameter combinations.
+
+I have limited time to support the action. As much as I try I will not be able to suit everyone. The main priority is to have a stable GitHub Action (when GitHub made changes that affected the Action I tried to solve them as fast as possible) and having a small, single-purpose code helps. I have an open issue to add tests that would help then expanding the Action (see [issue #59](https://github.com/cpina/github-action-push-to-another-repository/issues/59]).
+
+If you need something that it's not possible (exclude files, include only some, etc.) at the moment the two suggestions are:
+ * In a step before this action is ran you can "mv" or "cp" or even "rsync" (to use its --exclude and --include flexible parameters) and prepare the files that are going to be copied to the destination repository into a directory. Use this action to push this prepared directory. This is similar to the [example repository](https://github.com/cpina/push-to-another-repository-example/blob/main/.github/workflows/ci.yml#L19) creating PDFs/HTML from MarkDown and pushing it.
+ * Feel free to fork the GitHub Action and adjust it for your needs. It is implemented in Bash and does not have lots of logic (the execution is very linear) so you might be able to change for your needs.
+
+### Error: URL using bad/illegal format or missing URL
+
+It seems that GitHub created a Personal Token with a space character. This would happen if the Personal Token had a `#` or other characters.
+
+Please check that no space was copied by mistake to the `API_TOKEN_GITHUB`. If GitHub created a token with `#` or a space inside I suggest to create a new one.
+
+The problem, for the curious, is that the Personal Access Token is used in the git URLs and the URLs don't support `#`. The error "URL using bad/illegal format" is coming from curl library used by git.
+
+Complete information: [issue 70](https://github.com/cpina/github-action-push-to-another-repository/issues/70)
+
+### Error: remote: Repository not found.
+
+Bug report where the GitHub Action ended with:
+```
+remote: Repository not found.
+fatal: repository 'https://github.com/ORGNAME/REPONAME.git/' not found
+```
+
+See the possible solution in the comments of the [issue 75](https://github.com/cpina/github-action-push-to-another-repository/issues/75)
+

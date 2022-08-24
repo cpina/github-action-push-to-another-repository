@@ -68,6 +68,7 @@ runs:
     - '${{ inputs.target-branch }}'
     - '${{ inputs.commit-message }}'
     - '${{ inputs.target-directory }}'
+    - '${{ inputs.target-directory-ignored-file-name }}'
 branding:
   icon: git-commit
   color: green

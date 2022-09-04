@@ -231,37 +231,31 @@ Working example:
 
 https://github.com/cpina/push-to-another-repository-deploy-keys-example/blob/main/.github/workflows/ci.yml
 
-It generates files from:
+This generates files from:
 https://github.com/cpina/push-to-another-repository-deploy-keys-example
 
-To:
+and pushes them to:
 https://github.com/cpina/push-to-another-repository-output
 
 ## Troubleshooting
 
 ### Cannot push to the destination repository
 
-This is the most common problem. The first suggestion is to follow the steps to create the ssh keys or Personal Access Token and set it up again.
+This is the most common problem. Carefully read the logs on the GitHub Action pages of the source repositories. The action tries to write the errors and gives possible solutions / hints. The first suggestion is to follow the steps above to create the ssh keys or Personal Access Token, and set it up again, but some problems that have occurred in the past are:
 
-In the GitHub Action pages of the source repository: read carefully the logs. The action tries to write the errors and possible solutions / hints.
-
-Some problems that had happened in the past:
-
- * User was logged in GitHub with an account that did not have permission to push into the destination repository. The action could not push (permission denied).
+ * User was logged in to GitHub with an account that did not have permission to push into the destination repository. The action could not push (permission denied).
 
  * Token expired at some point
 
- * ssh generated key pair (public/private) was set in the wrong way, copy-paste errors, etc.
+ * ssh generated key pair (public/private) was set in the wrong way.
 
  * Wrong copy-paste including spaces or other characters that did not belong to the key / token 
 
-The easier way might be to try to follow the steps again.
-
 ### How to test the Personal Access Token?
 
-This might help understanding if the Personal Access Token that you generated have permissions to push to the destination repository. It could be expired, it could have the wrong permissions. It could be that the user that generated the Personal Access Token did not have permission to push into the destination repository.
+Test that the Personal Access Token has the correct permissions to push to the destination repository. This can be useful to check that the Personal Access Token has not expired or has the correct permissions.
 
-For this you need the Personal Access Token and then in your terminal:
+In your terminal do:
 
 ```
 $ git clone https://YOUR_USERNAME:YOUR_ACCESS_TOKEN@github.com/SOMETHING/REPO
@@ -271,7 +265,7 @@ $ git checkout -b test
 $ git push origin test
 ```
 
-For example, if the token did not have permission to write (because `repo` was not enabled for this token):
+For example, if the token did not have permission to write (because `repo` was not enabled for this token), you might see the following:
 ```
 $ git push origin test
 remote: Permission to cpina/qdacco.git denied to cpina.
@@ -282,14 +276,14 @@ fatal: unable to access 'https://github.com/cpina/qdacco/': The requested URL re
 
 #### Test connection to GitHub using the key pair
 
-You should have added the public key into the repository (as SSH deploy key, following the documentation).
+The public key should have been added into the repository (as an SSH deploy key following the documentation above).
 
-Once done, in your computer:
+Once done, on your computer:
 ```
 $ ssh -o IdentitiesOnly=yes -i .ssh/id_push-to-another-repository-output_ed25519 git@github.com
 ```
 
-Instead of `.ssh/id_push-to-another-repository-output_ed25519` use the file as you created it. This is the **private** key (it does not end with `.pub`). If you used the right private key for the correctly uploaded public key it will print something along the lines of:
+Instead of `.ssh/id_push-to-another-repository-output_ed25519`, use the file as you created it. This is the **private** key (it does not end with `.pub`). If you used the correct private key for the correctly uploaded public key, it will print something along the lines of:
 ```
 Hi cpina! You've successfully authenticated, but GitHub does not provide shell access.
 Connection to github.com closed.
@@ -300,19 +294,19 @@ If you see:
 git@github.com: Permission denied (publickey).
 ```
 
-The public key for this private key is not available on GitHub.
+the public key for this private key is not available on GitHub.
 
-#### Verify that the key is in the right repository
+#### Verify that the key is in the correct repository
 
 ```
 $ ssh-keygen -lf .ssh/id_push-to-another-repository-output_ed25519
 ```
-The output will be like:
+The output will be something like:
 ```
 256 SHA256:SOME_STRING_OF_CHARACTERS carles@pina.cat (ED25519)
 ```
 
-This should match what you see in the deploy key of the destination repository. If it does not match the deploy key is not properly set (you used different public/private key, etc.).
+This should match what you see in the deploy key of the destination repository. If it does not match, the deploy key is not properly set (perhaps different public/private keys were used, for example).
 
 ##### Permission of the key
 
@@ -327,9 +321,9 @@ Read/Write
 
 Use `source_directory: .`. This will copy all the source GitHub repository to the destination.
 
-:warning: this will also copy `.github/workflows/`! The destination repository will try to execute the action. It will probably fail because the Personal Acccess Token / ssh keys will not be available to the destination repository.
+:warning: this will also copy `.github/workflows/`! The destination repository will try to execute the action. It will probably fail because the Personal Acccess Token / ssh keys will not be available for the destination repository.
 
-Suggestion if you are using `source_directory: .` is to disable the GitHub Actions in the destination repository. To disable Actions in the destination repository:
+A suggestion if you are using `source_directory: .` is to disable the GitHub Actions in the destination repository. To disable Actions in the destination repository:
 
  * Go to the destination repository (e.g. https://github.com/cpina/push-to-another-repository-output/settings)
  * Click on "Settings"
@@ -337,23 +331,23 @@ Suggestion if you are using `source_directory: .` is to disable the GitHub Actio
  * Click on "Disable actions"
  * Click on "Save"
 
-### How can I copy only some files / only some directories / exclude some files / etc.
+### How can I copy only some files / only some directories / exclude some files / etc.?
 
 The GitHub Action has some configuration options, but they will not suit all the possible uses cases for everyone. I'm trying to avoid adding more and more parameters to suit all the use cases and the reason is that it's then hard to test all the parameter combinations.
 
-I have limited time to support the action. As much as I try I will not be able to suit everyone. The main priority is to have a stable GitHub Action (when GitHub made changes that affected the Action I tried to solve them as fast as possible) and having a small, single-purpose code helps. I have an open issue to add tests that would help then expanding the Action (see [issue #59](https://github.com/cpina/github-action-push-to-another-repository/issues/59]).
+I have limited time to support the Action. As much as I try, I will not be able to suit everyone. The main priority is to have a stable GitHub Action (when GitHub made changes that affected the Action, I tried to solve them as quickly as possible) and having a small, single-purpose code helps. I have an open issue to add tests that would help to expand the Action (see [issue #59](https://github.com/cpina/github-action-push-to-another-repository/issues/59]).
 
-If you need something that it's not possible (exclude files, include only some, etc.) at the moment the two suggestions are:
- * In a step before this action is ran you can "mv" or "cp" or even "rsync" (to use its --exclude and --include flexible parameters) and prepare the files that are going to be copied to the destination repository into a directory. Use this action to push this prepared directory. This is similar to the [example repository](https://github.com/cpina/push-to-another-repository-example/blob/main/.github/workflows/ci.yml#L19) creating PDFs/HTML from MarkDown and pushing it.
- * Feel free to fork the GitHub Action and adjust it for your needs. It is implemented in Bash and does not have lots of logic (the execution is very linear) so you might be able to change for your needs.
+If you need something that is not possible (exclude files, include only some, etc.) at the moment the two suggestions are:
+ * Before running this Action, "mv" or "cp" or even "rsync" (to use its --exclude and --include flexible parameters) to prepare the files that are going to be copied to the destination repository in one directory. Use this Action to push this prepared directory. This is similar to the [example repository](https://github.com/cpina/push-to-another-repository-example/blob/main/.github/workflows/ci.yml#L19) which creates PDFs/HTML from MarkDown and pushes them.
+ * Feel free to fork the GitHub Action and adjust it for your needs. It is implemented in Bash and does not have lots of logic (the execution is very linear) so it might be possible to change it for your needs.
 
 ### Error: URL using bad/illegal format or missing URL
 
 It seems that GitHub created a Personal Token with a space character. This would happen if the Personal Token had a `#` or other characters.
 
-Please check that no space was copied by mistake to the `API_TOKEN_GITHUB`. If GitHub created a token with `#` or a space inside I suggest to create a new one.
+Please check that no space was copied by mistake to the `API_TOKEN_GITHUB`. If GitHub created a token with `#` or a space inside, I suggest creating a new one.
 
-The problem, for the curious, is that the Personal Access Token is used in the git URLs and the URLs don't support `#`. The error "URL using bad/illegal format" is coming from curl library used by git.
+The problem, for those that are curious, is that the Personal Access Token is used in the git URLs and the URLs don't support `#`. The error "URL using bad/illegal format" is coming from the curl library used by git.
 
 Complete information: [issue 70](https://github.com/cpina/github-action-push-to-another-repository/issues/70)
 

@@ -172,7 +172,7 @@ Please read the [Troubleshooting](#troubleshooting) section if you encounter pro
 
 ### Set up using personal access token
 
-You don't need to do this if you chose to set up the deploy keys using the steps above. This method is here for compatibility with the initial approach of this GitHub Action. The personal access token would have access to all your repositories, so if it were to be leaked the damage would be greater (push to the same repositories that the Personal Access Token owner has access and other possible associated permissions). On the other hand the setup is a bit easier because it does not involve creating the key.
+This does not need to be done if you chose to set up the deploy keys using the steps above. This method is here for compatibility with the initial approach of this GitHub Action. The personal access token would have access to all your repositories, so if it were to be leaked, the damage would be greater (it would allow pushes to the same repositories that the Personal Access Token owner has access and other possible associated permissions). On the other hand, the setup is a bit easier because it does not involve creating the deploy key.
 
 Generate your personal token following the steps:
  * Go to the general GitHub Settings (on the right-hand side on the profile picture)
@@ -187,15 +187,15 @@ Generate your personal token following the steps:
 
     ![Screenshot-personal-access-token](docs/screenshots/pat-30.png)
    
- * Generate a new token entering a name, Expiration date and choose "Repo". Click the bottom button "Generate token". If you choose an expiration date you will need to create a new token after it. I've chosen in this example "No expiration", use carefully.
+ * Generate a new token entering a name, expiration date and choose "Repo". Click the bottom button "Generate token". If you choose an expiration date you will need to create a new token after this date. I've chosen in this example "No expiration"; this should be used carefully.
 
     ![Screenshot-personal-access-token-comment-expiration-scope](docs/screenshots/pat-40.png)
 
- * The token is displayed, copy it
+ * Copy the displayed token
 
     ![Screenshot-personal-access-token-comment-displayed](docs/screenshots/pat-50.png)
 
-Then make the token available to the GitHub Action following the steps:
+Then make the token available to the GitHub Action using the following steps:
  * Go to the GitHub page for the repository that you push from (**origin repository**). Click on "Settings" for the repository
 
     ![Screenshot-secrets-actions](docs/screenshots/ssh-key-50.png)

@@ -343,9 +343,11 @@ The GitHub Action has some configuration options, but they will not suit all the
 
 I have limited time to support the action. As much as I try I will not be able to suit everyone. The main priority is to have a stable GitHub Action (when GitHub made changes that affected the Action I tried to solve them as fast as possible) and having a small, single-purpose code helps. I have an open issue to add tests that would help then expanding the Action (see [issue #59](https://github.com/cpina/github-action-push-to-another-repository/issues/59]).
 
-If you need something that it's not possible (exclude files, include only some, etc.) at the moment the two suggestions are:
- * In a step before this action is ran you can "mv" or "cp" or even "rsync" (to use its --exclude and --include flexible parameters) and prepare the files that are going to be copied to the destination repository into a directory. Use this action to push this prepared directory. This is similar to the [example repository](https://github.com/cpina/push-to-another-repository-example/blob/main/.github/workflows/ci.yml#L19) creating PDFs/HTML from MarkDown and pushing it.
- * Feel free to fork the GitHub Action and adjust it for your needs. It is implemented in Bash and does not have lots of logic (the execution is very linear) so you might be able to change for your needs.
+If you need something that it's not possible (exclude files, include only some, etc.) please use a step before the action to filter from a temporary directory to the directory that will be pushed. This can be done with "rsync" or any tool that you feel comfortable (could be "rclone" or "find + exec + rm", "find + exec + mv", etc. depending on your needs).
+
+For example see the step: https://github.com/cpina/push-to-another-repository-deploy-keys-example/blob/main/.github/workflows/ci.yml#L21
+
+In the step above it installs rsync (depending on your environment it will already be installed) and it copies everything from "output_temp" to "output" excluding "main.epub". Be careful with the usage of "/" in rsync directories or exclude parameter. Refer to the rsync documentation for other options such as filter using an extension, include only some files / directories, etc.
 
 ### Error: URL using bad/illegal format or missing URL
 

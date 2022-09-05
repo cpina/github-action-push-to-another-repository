@@ -19,7 +19,7 @@ inputs:
     description: Email for the git commit
     required: true
   github-server:
-    description: 'Github server'
+    description: 'GitHub server'
     default: 'github.com'
     required: false
   user-name:

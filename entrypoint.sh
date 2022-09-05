@@ -39,7 +39,7 @@ then
 	chmod 600 "$DEPLOY_KEY_FILE"
 
 	SSH_KNOWN_HOSTS_FILE="$HOME/.ssh/known_hosts"
-	ssh-keyscan -H github.com > "$SSH_KNOWN_HOSTS_FILE"
+	ssh-keyscan -H "$GITHUB_SERVER" > "$SSH_KNOWN_HOSTS_FILE"
 
 	export GIT_SSH_COMMAND="ssh -i "$DEPLOY_KEY_FILE" -o UserKnownHostsFile=$SSH_KNOWN_HOSTS_FILE"
 

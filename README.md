@@ -13,6 +13,10 @@ Please read the documentation to understand which files and commits are kept in 
 ## Table of contents
 
 * [Overview](#overview)
+* [Usage](#usage)
+* [Setup](#setup)
+* [Troubleshooting](#troubleshooting)
+* [FAQ](#faq)
 
 ## Overview
 
@@ -122,8 +126,6 @@ carles@pinux:~$ ls -l /home/carles/.ssh/id_github_push-to-another-repository*
 carles@pinux:~$ 
 ```
 
-#### Set up the deployment key
-
 #### Destination repository
 
 In this section, we will add the generated public key to the destination repository. This allows the Action to push there.
@@ -174,7 +176,7 @@ The GitHub Action will detect the SSH_DEPLOY_KEY secret and use the private key 
 
 Please read the [Troubleshooting](#troubleshooting) section if you encounter problems.
 
-### Set up using Personal Access Token
+### Setup using Personal Access Token
 
 This does not need to be done if you chose to set up the deploy keys using the steps above. This method is here for compatibility with the initial approach of this GitHub Action. The Personal Access Token would have access to all your repositories, so if it were to be leaked, the damage would be greater: it would allow pushes to the same repositories to which the Personal Access Token owner has access, and other possible associated permissions. On the other hand, the setup is a bit easier because it does not involve creating the deploy key.
 

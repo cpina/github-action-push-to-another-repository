@@ -1,5 +1,6 @@
 #!/bin/sh -l
 
+set -x
 set -e  # if a command fails it stops the execution
 set -u  # script fails if trying to access to an undefined variable
 

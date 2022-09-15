@@ -51,20 +51,9 @@ inputs:
         
 runs:
   using: composite
-  args:
+  steps:
     - run: entrypoint.sh ${{ inputs.source-before-directory }} ${{ inputs.source-directory }} ${{ inputs.destination-github-username }} ${{ inputs.destination-repository-name }} ${{ inputs.github-server }} ${{ inputs.user-email }} ${{ inputs.user-name }} ${{ inputs.destination-repository-username }} ${{ inputs.target-branch }} ${{ inputs.commit-message }} ${{ inputs.target-directory }}
       shell: sh
-    - '${{ inputs.source-before-directory }}'
-    - '${{ inputs.source-directory }}'
-    - '${{ inputs.destination-github-username }}'
-    - '${{ inputs.destination-repository-name }}'
-    - '${{ inputs.github-server }}'
-    - '${{ inputs.user-email }}'
-    - '${{ inputs.user-name }}'
-    - '${{ inputs.destination-repository-username }}'
-    - '${{ inputs.target-branch }}'
-    - '${{ inputs.commit-message }}'
-    - '${{ inputs.target-directory }}'
 branding:
   icon: git-commit
   color: green

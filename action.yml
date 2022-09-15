@@ -54,7 +54,7 @@ runs:
   steps:
     - run: ls -l
       shell: sh
-    - run: $GITHUB_ACTION_PATH/entrypoint.sh ${{ inputs.source-before-directory }} ${{ inputs.source-directory }} ${{ inputs.destination-github-username }} ${{ inputs.destination-repository-name }} ${{ inputs.github-server }} ${{ inputs.user-email }} ${{ inputs.user-name }} ${{ inputs.destination-repository-username }} ${{ inputs.target-branch }} ${{ inputs.commit-message }} ${{ inputs.target-directory }}
+    - run: $GITHUB_ACTION_PATH/entrypoint.sh "${{ inputs.source-before-directory }}" "${{ inputs.source-directory }}" "${{ inputs.destination-github-username }}" "${{ inputs.destination-repository-name }}" "${{ inputs.github-server }}" "${{ inputs.user-email }}" "${{ inputs.user-name }}" "${{ inputs.destination-repository-username }}" "${{ inputs.target-branch }}" "${{ inputs.commit-message }}" "${{ inputs.target-directory }}"
       shell: sh
 branding:
   icon: git-commit

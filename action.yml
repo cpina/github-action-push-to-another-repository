@@ -52,7 +52,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: apt-get install openssh-client git
+    - run: apt-get update && apt-get install openssh-client git
       shell: sh
     - run: $GITHUB_ACTION_PATH/entrypoint.sh "${{ inputs.source-before-directory }}" "${{ inputs.source-directory }}" "${{ inputs.destination-github-username }}" "${{ inputs.destination-repository-name }}" "${{ inputs.github-server }}" "${{ inputs.user-email }}" "${{ inputs.user-name }}" "${{ inputs.destination-repository-username }}" "${{ inputs.target-branch }}" "${{ inputs.commit-message }}" "${{ inputs.target-directory }}"
       shell: sh

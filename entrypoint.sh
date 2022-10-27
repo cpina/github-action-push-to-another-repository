@@ -15,7 +15,7 @@ DESTINATION_REPOSITORY_USERNAME="${8}"
 TARGET_BRANCH="${9}"
 COMMIT_MESSAGE="${10}"
 TARGET_DIRECTORY="${11}"
-
+DO_NOT_DELETE_LIST_FILE="${12}"
 if [ -z "$DESTINATION_REPOSITORY_USERNAME" ]
 then
 	DESTINATION_REPOSITORY_USERNAME="$DESTINATION_GITHUB_USERNAME"
@@ -54,7 +54,6 @@ else
 	exit 1
 fi
 
-
 CLONE_DIR=$(mktemp -d)
 
 echo "[+] Git version"
@@ -82,7 +81,22 @@ TEMP_DIR=$(mktemp -d)
 # but not anymore. Otherwise we had to remove the files from "$CLONE_DIR",
 # including "." and with the exception of ".git/"
 mv "$CLONE_DIR/.git" "$TEMP_DIR/.git"
-
+if [ -n "$DO_NOT_DELETE_LIST_FILE" ]
+then
+	echo "[+] Using DO NOT DELETE LIST To INJECT INTO TMP"
+	cat < "$DO_NOT_DELETE_LIST_FILE" | while read -r line; do # 'line' is the variable name
+    if [ -n "$line" ]
+    then
+      if [ -f "$CLONE_DIR/$line" ]
+      then
+        cp -ra "$CLONE_DIR/$line" "$TEMP_DIR/$line"
+        echo "[+] Preserve file $line located, and copied to tmp dir"
+      else
+        echo "[+] Warning: preserve file $line Not found within cloned dir, skipping ahead"
+      fi
+    fi
+  done
+fi
 # $TARGET_DIRECTORY is '' by default
 ABSOLUTE_TARGET_DIRECTORY="$CLONE_DIR/$TARGET_DIRECTORY/"
 
@@ -99,6 +113,20 @@ echo "[+] Listing root Location"
 ls -al /
 
 mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
+if [ -n "$DO_NOT_DELETE_LIST_FILE" ]
+then
+	echo "[+] Using DO NOT DELETE LIST copy back from TMP"
+	cat < "$DO_NOT_DELETE_LIST_FILE" | while read -r line; do # 'line' is the variable name
+    if [ -n "$line" ]
+    then
+      if [ -f "$TEMP_DIR/$line" ]
+      then
+        echo "[+] Copying $line to TMP"
+        cp -ra "$TEMP_DIR/$line" "$CLONE_DIR/$line"
+      fi
+    fi
+  done
+fi
 
 echo "[+] List contents of $SOURCE_DIRECTORY"
 ls "$SOURCE_DIRECTORY"

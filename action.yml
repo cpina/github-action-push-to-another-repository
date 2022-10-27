@@ -48,7 +48,10 @@ inputs:
     description: '[Optional] The directory to wipe and replace in the target repository'
     default: ''
     required: false
-        
+  do-not-delete-list-file:
+    description: '[Optional] File path to a txt file containing each relative path that should be copied from the cloned dir, meaning its not wiped'
+    required: false
+    default: ''
 runs:
   using: docker
   image: Dockerfile
@@ -64,6 +67,7 @@ runs:
     - '${{ inputs.target-branch }}'
     - '${{ inputs.commit-message }}'
     - '${{ inputs.target-directory }}'
+    - '${{ inputs.do-not-delete-list-file }}'
 branding:
   icon: git-commit
   color: green

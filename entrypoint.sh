@@ -65,6 +65,7 @@ echo "[+] Cloning destination git repository $DESTINATION_REPOSITORY_NAME"
 # Setup git
 git config --global user.email "$USER_EMAIL"
 git config --global user.name "$USER_NAME"
+git config --global --add safe.directory /github/workspace
 
 if ! git clone --single-branch --depth 1 --branch "$TARGET_BRANCH" "$GIT_CMD_REPOSITORY" "$CLONE_DIR"; then
 	if ${CREATE_TARGET_BRANCH} && git clone --single-branch --depth 1 "$GIT_CMD_REPOSITORY" "$CLONE_DIR"; then

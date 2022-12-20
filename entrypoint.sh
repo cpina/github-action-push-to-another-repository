@@ -57,6 +57,7 @@ fi
 
 
 CLONE_DIR=$(mktemp -d)
+new_target_branch=0
 
 echo "[+] Git version"
 git --version
@@ -69,7 +70,7 @@ git config --global --add safe.directory /github/workspace
 
 if ! git clone --single-branch --depth 1 --branch "$TARGET_BRANCH" "$GIT_CMD_REPOSITORY" "$CLONE_DIR"; then
 	if ${CREATE_TARGET_BRANCH} && git clone --single-branch --depth 1 "$GIT_CMD_REPOSITORY" "$CLONE_DIR"; then
-		echo "[+] Creating target branch ${TARGET_BRANCH}"
+		new_target_branch=1
 	else
 		echo "::error::Could not clone the destination repository. Command:"
 		echo "::error::git clone --single-branch --branch $TARGET_BRANCH $GIT_CMD_REPOSITORY $CLONE_DIR"
@@ -137,6 +138,12 @@ echo "[+] Set directory is safe ($CLONE_DIR)"
 # Related to https://github.com/cpina/github-action-push-to-another-repository/issues/64 and https://github.com/cpina/github-action-push-to-another-repository/issues/64
 # TODO: review before releasing it as a version
 git config --global --add safe.directory "$CLONE_DIR"
+
+if [ ${new_target_branch} -ne 0 ]; then
+	echo "[+] Creating target branch ${TARGET_BRANCH}"
+	git branch ${TARGET_BRANCH}
+	git switch b1
+fi
 
 echo "[+] Adding git commit"
 git add .

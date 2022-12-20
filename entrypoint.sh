@@ -142,7 +142,7 @@ git config --global --add safe.directory "$CLONE_DIR"
 if [ ${new_target_branch} -ne 0 ]; then
 	echo "[+] Creating target branch ${TARGET_BRANCH}"
 	git branch ${TARGET_BRANCH}
-	git switch b1
+	git switch ${TARGET_BRANCH}
 fi
 
 echo "[+] Adding git commit"

@@ -69,9 +69,7 @@ git config --global --add safe.directory /github/workspace
 
 if ! git clone --single-branch --depth 1 --branch "$TARGET_BRANCH" "$GIT_CMD_REPOSITORY" "$CLONE_DIR"; then
 	if ${CREATE_TARGET_BRANCH} && git clone --single-branch --depth 1 "$GIT_CMD_REPOSITORY" "$CLONE_DIR"; then
-		echo "[+] Creating branch ${TARGET_BRANCH}"
-		git branch ${TARGET_BRANCH}
-		git switch ${TARGET_BRANCH}
+		echo "[+] Creating target branch ${TARGET_BRANCH}"
 	else
 		echo "::error::Could not clone the destination repository. Command:"
 		echo "::error::git clone --single-branch --branch $TARGET_BRANCH $GIT_CMD_REPOSITORY $CLONE_DIR"

@@ -72,10 +72,8 @@ if ! git clone --single-branch --depth 1 --branch "$TARGET_BRANCH" "$GIT_CMD_REP
 	if ${CREATE_TARGET_BRANCH} && git clone --single-branch --depth 1 "$GIT_CMD_REPOSITORY" "$CLONE_DIR"; then
 		new_target_branch=1
 	else
-		echo "::error::Could not clone the destination repository. Command:"
-		echo "::error::git clone --single-branch --branch $TARGET_BRANCH $GIT_CMD_REPOSITORY $CLONE_DIR"
-		echo "::error::(Note that if they exist USER_NAME and API_TOKEN is redacted by GitHub)"
-		echo "::error::Please verify that the target repository exist AND that it contains the destination branch name, and is accesible by the API_TOKEN_GITHUB OR SSH_DEPLOY_KEY"
+		echo "::error::Could not clone the destination repository."
+		echo "::error::Please verify that the target repository exists and is accesible with your API_TOKEN_GITHUB OR SSH_DEPLOY_KEY"
 		exit 1
 	fi
 fi

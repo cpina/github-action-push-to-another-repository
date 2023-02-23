@@ -60,6 +60,9 @@ CLONE_DIR=$(mktemp -d)
 echo "[+] Git version"
 git --version
 
+echo "[+] Enable git lfs"
+git lfs install
+
 echo "[+] Cloning destination git repository $DESTINATION_REPOSITORY_NAME"
 # Setup git
 git config --global user.email "$USER_EMAIL"

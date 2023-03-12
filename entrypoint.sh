@@ -15,6 +15,7 @@ DESTINATION_REPOSITORY_USERNAME="${8}"
 TARGET_BRANCH="${9}"
 COMMIT_MESSAGE="${10}"
 TARGET_DIRECTORY="${11}"
+CREATE_TARGET_BRANCH="${12}"
 
 if [ -z "$DESTINATION_REPOSITORY_USERNAME" ]
 then
@@ -56,6 +57,7 @@ fi
 
 
 CLONE_DIR=$(mktemp -d)
+new_target_branch=0
 
 echo "[+] Git version"
 git --version
@@ -67,17 +69,24 @@ echo "[+] Cloning destination git repository $DESTINATION_REPOSITORY_NAME"
 # Setup git
 git config --global user.email "$USER_EMAIL"
 git config --global user.name "$USER_NAME"
+git config --global --add safe.directory /github/workspace
 
-{
-	git clone --single-branch --depth 1 --branch "$TARGET_BRANCH" "$GIT_CMD_REPOSITORY" "$CLONE_DIR"
-} || {
-	echo "::error::Could not clone the destination repository. Command:"
-	echo "::error::git clone --single-branch --branch $TARGET_BRANCH $GIT_CMD_REPOSITORY $CLONE_DIR"
-	echo "::error::(Note that if they exist USER_NAME and API_TOKEN is redacted by GitHub)"
-	echo "::error::Please verify that the target repository exist AND that it contains the destination branch name, and is accesible by the API_TOKEN_GITHUB OR SSH_DEPLOY_KEY"
-	exit 1
+if ! git clone --single-branch --depth 1 --branch "$TARGET_BRANCH" "$GIT_CMD_REPOSITORY" "$CLONE_DIR"; then
+	if ${CREATE_TARGET_BRANCH} && git clone --single-branch --depth 1 "$GIT_CMD_REPOSITORY" "$CLONE_DIR"; then
+		new_target_branch=1
+	else
+		echo "::error::Could not clone the destination repository ('$GIT_CMD_REPOSITORY')."
+		echo -n "::error::Please verify that the target repository exists and is accesible with your API_TOKEN_GITHUB OR SSH_DEPLOY_KEY"
+		if ${CREATE_TARGET_BRANCH}; then
+			echo "."
+		else
+			echo ""
+			echo "::error::and that it contains the target branch ('$TARGET_BRANCH')."
+		fi
+		exit 1
+	fi
+fi
 
-}
 ls -la "$CLONE_DIR"
 
 TEMP_DIR=$(mktemp -d)
@@ -136,6 +145,12 @@ echo "[+] Set directory is safe ($CLONE_DIR)"
 # Related to https://github.com/cpina/github-action-push-to-another-repository/issues/64 and https://github.com/cpina/github-action-push-to-another-repository/issues/64
 # TODO: review before releasing it as a version
 git config --global --add safe.directory "$CLONE_DIR"
+
+if [ ${new_target_branch} -ne 0 ]; then
+	echo "[+] Creating target branch ${TARGET_BRANCH}"
+	git branch ${TARGET_BRANCH}
+	git switch ${TARGET_BRANCH}
+fi
 
 echo "[+] Adding git commit"
 git add .

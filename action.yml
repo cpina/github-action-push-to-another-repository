@@ -48,7 +48,13 @@ inputs:
     description: '[Optional] The directory to wipe and replace in the target repository'
     default: ''
     required: false
-        
+  create-target-branch-if-needed:
+    type: boolean
+    description: >-
+      [Optional] create target branch if not exist. Defaults to `false`
+    default: false
+    required: false
+
 runs:
   using: docker
   image: Dockerfile
@@ -64,6 +70,7 @@ runs:
     - '${{ inputs.target-branch }}'
     - '${{ inputs.commit-message }}'
     - '${{ inputs.target-directory }}'
+    - '${{ inputs.create-target-branch-if-needed }}'
 branding:
   icon: git-commit
   color: green

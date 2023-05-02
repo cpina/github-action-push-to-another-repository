@@ -160,8 +160,8 @@ git add .
 if [ -n "$EXCLUDE_DIRECTORIES" ]
 then
 	echo "[+] Checkout excluded dirs"
-	git reset -- "$EXCLUDE_DIRECTORIES"
-	git restore "$EXCLUDE_DIRECTORIES"
+	git reset -- $(echo $EXCLUDE_DIRECTORIES)
+	git restore $(echo $EXCLUDE_DIRECTORIES)
 fi
 echo "[+] git status:"
 git status

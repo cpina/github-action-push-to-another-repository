@@ -54,6 +54,9 @@ inputs:
       [Optional] create target branch if not exist. Defaults to `false`
     default: false
     required: false
+  exclude-directories:
+    description: '[Optional] The directory to exclude for remove from remote repo'
+    required: false
 
 runs:
   using: docker
@@ -71,6 +74,7 @@ runs:
     - '${{ inputs.commit-message }}'
     - '${{ inputs.target-directory }}'
     - '${{ inputs.create-target-branch-if-needed }}'
+    - '${{ inputs.exclude-directories }}'
 branding:
   icon: git-commit
   color: green

@@ -38,25 +38,31 @@ setupGit() {
 	git config --global user.name "$USER_NAME"
 }
 
+cloneSimple() {
+	git clone --single-branch --depth 1 --branch "$TARGET_BRANCH" "$GIT_CMD_REPOSITORY" "$CLONE_DIR"
+}
+
+cloneCreateBranch() {
+	if [ "$CREATE_TARGET_BRANCH_IF_NEEDED" = "true" ]
+	then
+		# Default branch of the repository is cloned. Later on the required branch
+		# will be created
+		git clone --single-branch --depth 1 "$GIT_CMD_REPOSITORY" "$CLONE_DIR"
+	else
+		false
+	fi
+}
+
+cloneError() {
+	echo "::error::Could not clone the destination repository. Command:"
+	echo "::error::git clone --single-branch --branch $TARGET_BRANCH $GIT_CMD_REPOSITORY $CLONE_DIR"
+	echo "::error::(Note that if they exist USER_NAME and API_TOKEN is redacted by GitHub)"
+	echo "::error::Please verify that the target repository exist AND that it contains the destination branch name, and is accesible by the API_TOKEN_GITHUB OR SSH_DEPLOY_KEY"
+	exit 1
+}
+
 cloneRepo() {
-	{
-		git clone --single-branch --depth 1 --branch "$TARGET_BRANCH" "$GIT_CMD_REPOSITORY" "$CLONE_DIR"
-	} || {
-		if [ "$CREATE_TARGET_BRANCH_IF_NEEDED" = "true" ]
-		then
-			# Default branch of the repository is cloned. Later on the required branch
-			# will be created
-			git clone --single-branch --depth 1 "$GIT_CMD_REPOSITORY" "$CLONE_DIR"
-		else
-			false
-		fi
-	} || {
-		echo "::error::Could not clone the destination repository. Command:"
-		echo "::error::git clone --single-branch --branch $TARGET_BRANCH $GIT_CMD_REPOSITORY $CLONE_DIR"
-		echo "::error::(Note that if they exist USER_NAME and API_TOKEN is redacted by GitHub)"
-		echo "::error::Please verify that the target repository exist AND that it contains the destination branch name, and is accesible by the API_TOKEN_GITHUB OR SSH_DEPLOY_KEY"
-		exit 1
-	}
+	cloneSimple || cloneCreateBranch || cloneError
 }
 
 checkSource() {

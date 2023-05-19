@@ -65,9 +65,13 @@ echo "[+] Enable git lfs"
 git lfs install
 
 echo "[+] Cloning destination git repository $DESTINATION_REPOSITORY_NAME"
+
 # Setup git
 git config --global user.email "$USER_EMAIL"
 git config --global user.name "$USER_NAME"
+
+# workaround for https://github.com/cpina/github-action-push-to-another-repository/issues/103
+git config --global http.version HTTP/1.1
 
 {
 	git clone --single-branch --depth 1 --branch "$TARGET_BRANCH" "$GIT_CMD_REPOSITORY" "$CLONE_DIR"

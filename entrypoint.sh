@@ -149,6 +149,10 @@ git config --global --add safe.directory "$CLONE_DIR"
 if [ "$CREATE_TARGET_BRANCH_IF_NEEDED" = "true" ]
 then
     echo "[+] Switch to the TARGET_BRANCH"
+    echo "[+] git branch"
+    git branch
+    echo "[+] git branch -r"
+    git branch -r
     git switch -c "$TARGET_BRANCH"
 fi
 

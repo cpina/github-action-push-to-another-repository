@@ -143,13 +143,12 @@ COMMIT_MESSAGE="${COMMIT_MESSAGE/ORIGIN_COMMIT/$ORIGIN_COMMIT}"
 COMMIT_MESSAGE="${COMMIT_MESSAGE/\$GITHUB_REF/$GITHUB_REF}"
 
 echo "[+] Set directory is safe ($CLONE_DIR)"
-# Related to https://github.com/cpina/github-action-push-to-another-repository/issues/64 and https://github.com/cpina/github-action-push-to-another-repository/issues/64
-# TODO: review before releasing it as a version
+# Related to https://github.com/cpina/github-action-push-to-another-repository/issues/64
 git config --global --add safe.directory "$CLONE_DIR"
-
 
 if [ "$CREATE_TARGET_BRANCH_IF_NEEDED" = "true" ]
 then
+    echo "[+] Switch to the TARGET_BRANCH"
     git switch -c "$TARGET_BRANCH"
 fi
 

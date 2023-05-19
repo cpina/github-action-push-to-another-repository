@@ -149,7 +149,11 @@ git config --global --add safe.directory "$CLONE_DIR"
 if [ "$CREATE_TARGET_BRANCH_IF_NEEDED" = "true" ]
 then
     echo "[+] Switch to the TARGET_BRANCH"
-    git switch -c "$TARGET_BRANCH"
+    # || true: if the $TARGET_BRANCH already existed in the destination repo:
+    # it is already the current branch and it cannot be switched to
+    # (it's not needed)
+    # If the branch did not exist: it switches (creating) the branch
+    git switch -c "$TARGET_BRANCH" || true
 fi
 
 echo "[+] Adding git commit"

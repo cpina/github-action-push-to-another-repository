@@ -16,6 +16,7 @@ TARGET_BRANCH="${9}"
 COMMIT_MESSAGE="${10}"
 TARGET_DIRECTORY="${11}"
 CREATE_TARGET_BRANCH_IF_NEEDED="${12}"
+EXCLUDE_DIRECTORIES="${13}"
 
 if [ -z "$DESTINATION_REPOSITORY_USERNAME" ]
 then
@@ -119,7 +120,7 @@ mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
 
 echo "[+] List contents of $SOURCE_DIRECTORY"
 ls "$SOURCE_DIRECTORY"
-
+rm -rf "$SOURCE_DIRECTORY/.git"
 echo "[+] Checking if local $SOURCE_DIRECTORY exist"
 if [ ! -d "$SOURCE_DIRECTORY" ]
 then
@@ -140,6 +141,7 @@ cp -ra "$SOURCE_DIRECTORY"/. "$CLONE_DIR/$TARGET_DIRECTORY"
 cd "$CLONE_DIR"
 
 echo "[+] Files that will be pushed"
+chown -R $(id -u):$(id -g) .
 ls -la
 
 ORIGIN_COMMIT="https://$GITHUB_SERVER/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
@@ -162,7 +164,12 @@ fi
 
 echo "[+] Adding git commit"
 git add .
-
+if [ -n "$EXCLUDE_DIRECTORIES" ]
+then
+	echo "[+] Checkout excluded dirs"
+	git reset -- $(echo $EXCLUDE_DIRECTORIES)
+	git restore $(echo $EXCLUDE_DIRECTORIES)
+fi
 echo "[+] git status:"
 git status
 

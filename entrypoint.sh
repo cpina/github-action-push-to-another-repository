@@ -15,6 +15,7 @@ DESTINATION_REPOSITORY_USERNAME="${8}"
 TARGET_BRANCH="${9}"
 COMMIT_MESSAGE="${10}"
 TARGET_DIRECTORY="${11}"
+TARGET_DIRECTORY_IGNORED_FILE_NAME="${12}"
 
 if [ -z "$DESTINATION_REPOSITORY_USERNAME" ]
 then
@@ -39,7 +40,7 @@ then
 	chmod 600 "$DEPLOY_KEY_FILE"
 
 	SSH_KNOWN_HOSTS_FILE="$HOME/.ssh/known_hosts"
-	ssh-keyscan -H "$GITHUB_SERVER" > "$SSH_KNOWN_HOSTS_FILE"
+	ssh-keyscan -H github.com > "$SSH_KNOWN_HOSTS_FILE"
 
 	export GIT_SSH_COMMAND="ssh -i "$DEPLOY_KEY_FILE" -o UserKnownHostsFile=$SSH_KNOWN_HOSTS_FILE"
 
@@ -66,7 +67,7 @@ git config --global user.email "$USER_EMAIL"
 git config --global user.name "$USER_NAME"
 
 {
-	git clone --single-branch --depth 1 --branch "$TARGET_BRANCH" "$GIT_CMD_REPOSITORY" "$CLONE_DIR"
+	git clone --single-branch --branch "$TARGET_BRANCH" "$GIT_CMD_REPOSITORY" "$CLONE_DIR"
 } || {
 	echo "::error::Could not clone the destination repository. Command:"
 	echo "::error::git clone --single-branch --branch $TARGET_BRANCH $GIT_CMD_REPOSITORY $CLONE_DIR"
@@ -87,7 +88,10 @@ mv "$CLONE_DIR/.git" "$TEMP_DIR/.git"
 ABSOLUTE_TARGET_DIRECTORY="$CLONE_DIR/$TARGET_DIRECTORY/"
 
 echo "[+] Deleting $ABSOLUTE_TARGET_DIRECTORY"
-rm -rf "$ABSOLUTE_TARGET_DIRECTORY"
+CURRENT_DIR="$(pwd)"
+cd $ABSOLUTE_TARGET_DIRECTORY
+ls | grep -v $TARGET_DIRECTORY_IGNORED_FILE_NAME | xargs rm -fr
+cd $CURRENT_DIR
 
 echo "[+] Creating (now empty) $ABSOLUTE_TARGET_DIRECTORY"
 mkdir -p "$ABSOLUTE_TARGET_DIRECTORY"

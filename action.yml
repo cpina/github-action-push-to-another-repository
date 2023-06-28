@@ -48,6 +48,10 @@ inputs:
     description: '[Optional] The directory to wipe and replace in the target repository'
     default: ''
     required: false
+  target-directory-ignored-file-name:
+    description: '[Optional] A file name within the target directory that is not deleted'
+    default: ''
+    required: false
         
 runs:
   using: docker
@@ -64,6 +68,7 @@ runs:
     - '${{ inputs.target-branch }}'
     - '${{ inputs.commit-message }}'
     - '${{ inputs.target-directory }}'
+    - '${{ inputs.target-directory-ignored-file-name }}'
 branding:
   icon: git-commit
   color: green

@@ -167,7 +167,7 @@ git add .
 echo "[+] git status:"
 git status
 
-if [ "$ALLOW_EMPTY_BRANCHES" = "false" ] && [ "$(git status)" = "nothing to commit, working tree clean" ]
+if [ "$ALLOW_EMPTY_BRANCHES" = "false" ] && [ "$(git status --short | wc -l | xargs echo -n)" = "0" ]
 then
     echo "[~] No changes have been made"
 else

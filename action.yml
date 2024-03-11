@@ -54,6 +54,10 @@ inputs:
       [Optional] create target branch if not exist. Defaults to `false`
     default: false
     required: false
+  tag-name:
+    description: '[Optional] Add a tag to the commit'
+    default: ''
+    required: false
 
 runs:
   using: docker
@@ -71,6 +75,7 @@ runs:
     - '${{ inputs.commit-message }}'
     - '${{ inputs.target-directory }}'
     - '${{ inputs.create-target-branch-if-needed }}'
+    - '${{ inputs.tag-name }}'
 branding:
   icon: git-commit
   color: green

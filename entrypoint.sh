@@ -16,6 +16,7 @@ TARGET_BRANCH="${9}"
 COMMIT_MESSAGE="${10}"
 TARGET_DIRECTORY="${11}"
 CREATE_TARGET_BRANCH_IF_NEEDED="${12}"
+KEEP_GITATTRIBUTES="${13}"
 
 if [ -z "$DESTINATION_REPOSITORY_USERNAME" ]
 then
@@ -100,6 +101,13 @@ TEMP_DIR=$(mktemp -d)
 # including "." and with the exception of ".git/"
 mv "$CLONE_DIR/.git" "$TEMP_DIR/.git"
 
+# If enabled, copy .gitattributes file to keep LFS working.
+if [ "$KEEP_GITATTRIBUTES" = "true" ]
+then
+	mv "$CLONE_DIR/.gitattributes" "$TEMP_DIR/.gitattributes"
+fi
+
+
 # $TARGET_DIRECTORY is '' by default
 ABSOLUTE_TARGET_DIRECTORY="$CLONE_DIR/$TARGET_DIRECTORY/"
 
@@ -116,6 +124,11 @@ echo "[+] Listing root Location"
 ls -al /
 
 mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
+# If enabled, restore .gitattributes file to keep LFS working.
+if [ "$KEEP_GITATTRIBUTES" = "true" ]
+then
+	mv "$TEMP_DIR/.gitattributes" "$CLONE_DIR/.gitattributes"
+fi
 
 echo "[+] List contents of $SOURCE_DIRECTORY"
 ls "$SOURCE_DIRECTORY"

@@ -16,6 +16,7 @@ TARGET_BRANCH="${9}"
 COMMIT_MESSAGE="${10}"
 TARGET_DIRECTORY="${11}"
 CREATE_TARGET_BRANCH_IF_NEEDED="${12}"
+ALLOW_EMPTY_BRANCHES="${13}"
 
 if [ -z "$DESTINATION_REPOSITORY_USERNAME" ]
 then
@@ -166,10 +167,15 @@ git add .
 echo "[+] git status:"
 git status
 
-echo "[+] git diff-index:"
-# git diff-index : to avoid doing the git commit failing if there are no changes to be commit
-git diff-index --quiet HEAD || git commit --message "$COMMIT_MESSAGE"
-
-echo "[+] Pushing git commit"
-# --set-upstream: sets de branch when pushing to a branch that does not exist
-git push "$GIT_CMD_REPOSITORY" --set-upstream "$TARGET_BRANCH"
+if [ "$ALLOW_EMPTY_BRANCHES" = "false" ] && [ "$(git status --short | wc -l | xargs echo -n)" = "0" ]
+then
+    echo "[~] No changes have been made"
+else
+    echo "[+] git diff-index:"
+    # git diff-index : to avoid doing the git commit failing if there are no changes to be commit
+    git diff-index --quiet HEAD || git commit --message "$COMMIT_MESSAGE"
+    
+    echo "[+] Pushing git commit"
+    # --set-upstream: sets de branch when pushing to a branch that does not exist
+    git push "$GIT_CMD_REPOSITORY" --set-upstream "$TARGET_BRANCH"
+fi

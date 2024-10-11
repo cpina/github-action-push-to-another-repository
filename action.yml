@@ -54,6 +54,12 @@ inputs:
       [Optional] create target branch if not exist. Defaults to `false`
     default: false
     required: false
+  keep-gitattributes:
+    type: boolean
+    description: >-
+      [Optional] If true, .gitattributes will not be overwritten. Required for LFS in target repo. Defaults to `false`
+    default: false
+    required: false
 
 runs:
   using: docker
@@ -71,6 +77,7 @@ runs:
     - '${{ inputs.commit-message }}'
     - '${{ inputs.target-directory }}'
     - '${{ inputs.create-target-branch-if-needed }}'
+    - '${{ inputs.keep-gitattributes }}'
 branding:
   icon: git-commit
   color: green

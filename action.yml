@@ -54,6 +54,14 @@ inputs:
       [Optional] create target branch if not exist. Defaults to `false`
     default: false
     required: false
+  source-file:
+    description: '[Optional] Source file to transfer'
+    required: false
+    default: ''
+  target-file:
+    description: '[Optional] Target file path in destination repository'
+    required: false
+    default: ''
 
 runs:
   using: docker
@@ -71,6 +79,8 @@ runs:
     - '${{ inputs.commit-message }}'
     - '${{ inputs.target-directory }}'
     - '${{ inputs.create-target-branch-if-needed }}'
+    - '${{ inputs.source-file }}'
+    - '${{ inputs.target-file }}'
 branding:
   icon: git-commit
   color: green

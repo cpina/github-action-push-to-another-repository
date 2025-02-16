@@ -16,6 +16,8 @@ TARGET_BRANCH="${9}"
 COMMIT_MESSAGE="${10}"
 TARGET_DIRECTORY="${11}"
 CREATE_TARGET_BRANCH_IF_NEEDED="${12}"
+SOURCE_FILE="${13}"
+TARGET_FILE="${14}"
 
 if [ -z "$DESTINATION_REPOSITORY_USERNAME" ]
 then
@@ -117,26 +119,53 @@ ls -al /
 
 mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
 
-echo "[+] List contents of $SOURCE_DIRECTORY"
-ls "$SOURCE_DIRECTORY"
-
-echo "[+] Checking if local $SOURCE_DIRECTORY exist"
-if [ ! -d "$SOURCE_DIRECTORY" ]
+# if source directory is set
+if [ -n "$SOURCE_DIRECTORY" ]
 then
-	echo "ERROR: $SOURCE_DIRECTORY does not exist"
-	echo "This directory needs to exist when push-to-another-repository is executed"
-	echo
-	echo "In the example it is created by ./build.sh: https://github.com/cpina/push-to-another-repository-example/blob/main/.github/workflows/ci.yml#L19"
-	echo
-	echo "If you want to copy a directory that exist in the source repository"
-	echo "to the target repository: you need to clone the source repository"
-	echo "in a previous step in the same build section. For example using"
-	echo "actions/checkout@v2. See: https://github.com/cpina/push-to-another-repository-example/blob/main/.github/workflows/ci.yml#L16"
-	exit 1
-fi
+    echo "[+] List contents of $SOURCE_DIRECTORY"
+    ls "$SOURCE_DIRECTORY"
+
+    echo "[+] Checking if local $SOURCE_DIRECTORY exist"
+    if [ ! -d "$SOURCE_DIRECTORY" ]
+	then
+		echo "ERROR: $SOURCE_DIRECTORY does not exist"
+		echo "This directory needs to exist when push-to-another-repository is executed"
+		echo
+		echo "In the example it is created by ./build.sh: https://github.com/cpina/push-to-another-repository-example/blob/main/.github/workflows/ci.yml#L19"
+		echo
+		echo "If you want to copy a directory that exist in the source repository"
+		echo "to the target repository: you need to clone the source repository"
+		echo "in a previous step in the same build section. For example using"
+		echo "actions/checkout@v2. See: https://github.com/cpina/push-to-another-repository-example/blob/main/.github/workflows/ci.yml#L16"
+		exit 1
+	fi
 
 echo "[+] Copying contents of source repository folder $SOURCE_DIRECTORY to folder $TARGET_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
 cp -ra "$SOURCE_DIRECTORY"/. "$CLONE_DIR/$TARGET_DIRECTORY"
+fi
+
+if [ -n "$SOURCE_FILE" ] && [ -n "$TARGET_FILE" ]
+then
+	echo "[+] SOURCE_FILE: $SOURCE_FILE"
+	echo "[+] TARGET_FILE: $TARGET_FILE"
+
+    echo "[+] Copying single file from $SOURCE_FILE to $TARGET_FILE"
+    if [ ! -f "$SOURCE_FILE" ]
+    then
+        echo "::error::Source file $SOURCE_FILE does not exist"
+        exit 1
+    fi
+    
+    # Create target directory if it doesn't exist
+    TARGET_FILE_DIR=$(dirname "$CLONE_DIR/$TARGET_FILE")
+    mkdir -p "$TARGET_FILE_DIR"
+    
+    # Copy the file
+    cp "$SOURCE_FILE" "$CLONE_DIR/$TARGET_FILE"
+fi
+
+
+
 cd "$CLONE_DIR"
 
 echo "[+] Files that will be pushed"

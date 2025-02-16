@@ -113,15 +113,15 @@ then
 
 	echo "[+] Creating (now empty) $ABSOLUTE_TARGET_DIRECTORY"
 	mkdir -p "$ABSOLUTE_TARGET_DIRECTORY"
-
-	echo "[+] Listing Current Directory Location"
-	ls -al
-
-	echo "[+] Listing root Location"
-	ls -al /
-
-	mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
 fi
+
+echo "[+] Listing Current Directory Location"
+ls -al
+
+echo "[+] Listing root Location"
+ls -al /
+
+mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
 
 # if source directory is set
 if [ -n "$SOURCE_DIRECTORY" ]

@@ -102,7 +102,7 @@ TEMP_DIR=$(mktemp -d)
 # including "." and with the exception of ".git/"
 mv "$CLONE_DIR/.git" "$TEMP_DIR/.git"
 
-# check if sourcefile and target file is not set
+# Do this if sourcefile and target file is not set, means we are doing a directory transfer
 if [ -z "$SOURCE_FILE" ] && [ -z "$TARGET_FILE" ]
 then
 	# $TARGET_DIRECTORY is '' by default
@@ -123,8 +123,8 @@ ls -al /
 
 mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
 
-# if source directory is set
-if [ -n "$SOURCE_DIRECTORY" ]
+# If sourcefile and target file is not set, means we are doing a directory transfer
+if [ -z "$SOURCE_FILE" ] && [ -z "$TARGET_FILE" ]
 then
     echo "[+] List contents of $SOURCE_DIRECTORY"
     ls "$SOURCE_DIRECTORY"
@@ -144,10 +144,11 @@ then
 		exit 1
 	fi
 
-echo "[+] Copying contents of source repository folder $SOURCE_DIRECTORY to folder $TARGET_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
-cp -ra "$SOURCE_DIRECTORY"/. "$CLONE_DIR/$TARGET_DIRECTORY"
+	echo "[+] Copying contents of source repository folder $SOURCE_DIRECTORY to folder $TARGET_DIRECTORY in git repo $DESTINATION_REPOSITORY_NAME"
+	cp -ra "$SOURCE_DIRECTORY"/. "$CLONE_DIR/$TARGET_DIRECTORY"
 fi
 
+# If sourcefile and target file is set, means we are doing a file transfer
 if [ -n "$SOURCE_FILE" ] && [ -n "$TARGET_FILE" ]
 then
 	echo "[+] SOURCE_FILE: $SOURCE_FILE"

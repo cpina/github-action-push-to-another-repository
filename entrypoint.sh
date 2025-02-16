@@ -102,22 +102,26 @@ TEMP_DIR=$(mktemp -d)
 # including "." and with the exception of ".git/"
 mv "$CLONE_DIR/.git" "$TEMP_DIR/.git"
 
-# $TARGET_DIRECTORY is '' by default
-ABSOLUTE_TARGET_DIRECTORY="$CLONE_DIR/$TARGET_DIRECTORY/"
+# check if sourcefile and target file is not set
+if [ -z "$SOURCE_FILE" ] && [ -z "$TARGET_FILE" ]
+then
+	# $TARGET_DIRECTORY is '' by default
+	ABSOLUTE_TARGET_DIRECTORY="$CLONE_DIR/$TARGET_DIRECTORY/"
 
-echo "[+] Deleting $ABSOLUTE_TARGET_DIRECTORY"
-rm -rf "$ABSOLUTE_TARGET_DIRECTORY"
+	echo "[+] Deleting $ABSOLUTE_TARGET_DIRECTORY"
+	rm -rf "$ABSOLUTE_TARGET_DIRECTORY"
 
-echo "[+] Creating (now empty) $ABSOLUTE_TARGET_DIRECTORY"
-mkdir -p "$ABSOLUTE_TARGET_DIRECTORY"
+	echo "[+] Creating (now empty) $ABSOLUTE_TARGET_DIRECTORY"
+	mkdir -p "$ABSOLUTE_TARGET_DIRECTORY"
 
-echo "[+] Listing Current Directory Location"
-ls -al
+	echo "[+] Listing Current Directory Location"
+	ls -al
 
-echo "[+] Listing root Location"
-ls -al /
+	echo "[+] Listing root Location"
+	ls -al /
 
-mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
+	mv "$TEMP_DIR/.git" "$CLONE_DIR/.git"
+fi
 
 # if source directory is set
 if [ -n "$SOURCE_DIRECTORY" ]

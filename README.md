@@ -13,7 +13,7 @@ This is a fork of [cpina/github-action-push-to-another-repository](https://githu
 OpenSSL version mismatch. Built against 3050003f, you have 30500010
 ```
 
-**Root Cause**: The Alpine Linux base image was using inconsistent OpenSSL versions between the container's SSH client and the system's OpenSSL library.
+**Root Cause**: The Alpine Linux base image was using inconsistent OpenSSL versions between the container's SSH client and the system's OpenSSL library. This is a known issue tracked in the Alpine Linux project: https://gitlab.alpinelinux.org/alpine/aports/-/issues/17547
 
 **Solution**: Updated the Dockerfile to:
 1. Pin Alpine to version 3.20 for consistency
